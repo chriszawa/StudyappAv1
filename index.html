@@ -162,6 +162,93 @@ p{margin:0}
 
 .opt .dot{transition:transform .2s}
 .split-wrap{display:inline-block}
+
+/* XP, levels, streak */
+.lvl{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.lvl b{color:var(--on-accent);background:var(--accent);border-radius:6px;padding:2px 7px;font-weight:500}
+.xpbar{height:6px;border-radius:6px;background:var(--surface-2);overflow:hidden}
+.xpbar span{display:block;height:100%;background:linear-gradient(90deg,var(--accent-deep),var(--accent));border-radius:6px;transition:width .6s}
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stats3 .stat{padding:12px}
+.stats3 .stat b{font-size:26px}
+.stat.hot b{color:var(--accent-ink)}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px}
+.seg button{padding:10px;border-radius:10px;font-weight:600;font-size:15px;color:var(--muted)}
+.seg button[aria-selected="true"]{background:var(--surface-2);color:var(--fg)}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.sec-h h3{margin:0;font-family:var(--display);font-weight:600;font-size:18px}
+
+/* Pills */
+.pills{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pillcard{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;text-align:left;display:grid;gap:6px;min-width:0}
+.pillcard .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);font-family:var(--mono);font-size:11px;color:var(--accent-ink)}
+.pillcard strong{font-size:14px;font-weight:600}
+.pillcard span{font-size:12px;color:var(--muted)}
+.pillcard.done{border-color:var(--accent-ink)}
+.pillcard.done .ic{background:var(--accent);color:var(--on-accent)}
+
+/* Topics */
+.tdot{width:12px;height:12px;border-radius:50%;flex:none;display:inline-block}
+.s-red{background:var(--unknown)} .s-orange{background:var(--unsure)} .s-lime{background:var(--accent);box-shadow:0 0 10px var(--glow)}
+.topic{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;background:var(--surface);border:1px solid var(--line)}
+.topic .nm{flex:1;min-width:0;font-weight:500;overflow-wrap:anywhere}
+.topic .nm small{display:block;font-size:12px;color:var(--muted);font-weight:400}
+.cset{display:flex;gap:6px}
+.cset button{width:28px;height:28px;border-radius:50%;border:2px solid transparent;display:grid;place-items:center;opacity:.35}
+.cset button[aria-pressed="true"]{opacity:1;border-color:var(--fg)}
+.cset button i{width:14px;height:14px;border-radius:50%;display:block}
+.star{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:var(--muted);font-size:16px}
+.star[aria-pressed="true"]{color:var(--accent-ink)}
+.x{width:26px;height:26px;color:var(--muted);font-size:18px}
+.addrow{display:flex;gap:8px}
+.field{flex:1;min-width:0;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:inherit;font-size:16px}
+.field:focus{outline:2px solid var(--accent-ink);outline-offset:1px}
+.btn-sm{padding:0 18px;border-radius:14px;background:var(--fg);color:var(--bg);font-weight:600}
+.ready{display:flex;align-items:baseline;gap:10px}
+.ready .big{font-family:var(--display);font-size:56px;font-weight:300;line-height:1;color:var(--accent-ink);font-variant-numeric:tabular-nums}
+.stack{display:flex;height:10px;border-radius:10px;overflow:hidden;background:var(--surface-2);gap:2px}
+.stack i{display:block;height:100%}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+.target{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:var(--surface-2)}
+.target select{flex:1;min-width:0;background:transparent;border:0;color:var(--fg);font:inherit;font-weight:600;font-size:16px}
+
+/* Compact timer */
+.ctimer{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.ctimer .ct{font-family:var(--display);font-size:28px;font-weight:300;font-variant-numeric:tabular-nums;min-width:84px}
+.ctimer .tbar{flex:1}
+.mini-play{width:40px;height:40px;border-radius:50%;background:var(--fg);color:var(--bg);display:grid;place-items:center;flex:none}
+.mini-play svg{width:16px;height:16px;fill:currentColor}
+
+/* Flashcards */
+.deck-top{display:flex;justify-content:space-between;align-items:center}
+.combo{font-family:var(--mono);font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.combo.on{border-color:var(--accent-ink);color:var(--accent-ink);box-shadow:0 0 16px var(--glow)}
+.fcard{min-height:240px;border-radius:24px;background:var(--surface);border:1px solid var(--line);padding:24px;display:flex;flex-direction:column;gap:16px;justify-content:center}
+.fcard .q{font-family:var(--display);font-size:24px;line-height:1.25;font-weight:500;overflow-wrap:anywhere}
+.fcard .ans{padding-top:16px;border-top:1px dashed var(--line);font-size:18px;color:var(--accent-ink);overflow-wrap:anywhere}
+.grade{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.grade button{padding:16px 6px;border-radius:16px;font-weight:600;font-size:15px;border:1px solid var(--line);background:var(--surface)}
+.grade .g-miss{color:var(--unknown);border-color:var(--unknown)}
+.grade .g-uns{color:var(--unsure);border-color:var(--unsure)}
+.grade .g-got{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.mini-list{display:grid;gap:6px}
+.mini-list div{font-size:14px;color:var(--muted);padding:8px 12px;border-radius:10px;background:var(--surface);overflow-wrap:anywhere}
+
+/* Assess + reward */
+.choices{display:grid;gap:10px}
+.choices button{padding:18px;border-radius:16px;background:var(--surface);border:1px solid var(--line);text-align:left;font-weight:600;font-size:17px;display:flex;align-items:center;gap:12px}
+.choices button span{font-weight:400;font-size:14px;color:var(--muted);display:block}
+.xp-big{font-family:var(--display);font-size:84px;font-weight:300;line-height:1;color:var(--accent-ink);font-variant-numeric:tabular-nums}
+.changes{display:grid;gap:8px}
+.change{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);font-size:15px}
+.change .nm{flex:1;min-width:0;overflow-wrap:anywhere}
+.change .arr{display:flex;align-items:center;gap:6px;color:var(--muted);font-family:var(--mono);font-size:12px}
+.mastered{position:relative;border-radius:22px;padding:22px;background:radial-gradient(circle at 50% 0%,rgba(219,239,144,.28),transparent 70%),var(--surface);border:1px solid var(--accent-ink);text-align:center;display:grid;gap:8px;justify-items:center;overflow:hidden}
+.mastered svg{width:64px;height:64px;filter:drop-shadow(0 0 16px var(--glow))}
+.mastered svg polygon{fill:var(--accent)}
+.xpf{position:fixed;left:50%;top:22%;transform:translateX(-50%);font-family:var(--display);font-weight:600;font-size:22px;color:var(--accent-ink);pointer-events:none;z-index:20;text-shadow:0 0 16px var(--glow);animation:xpf 1s ease-out forwards}
+@keyframes xpf{from{opacity:0;transform:translate(-50%,10px)}20%{opacity:1}to{opacity:0;transform:translate(-50%,-40px)}}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -180,59 +267,61 @@ const QUIZ = [
   {k:'slot', q:'When can you study?', o:[['Morning','Mornings'],['Afternoon','Afternoons'],['Evening','Evenings'],['Late night','After work / late night']]}
 ];
 
+/* mode: focus = big timer + steps, then a self-rating. tool = work happens inside the app. */
 const B = {
-  warmup:{name:'Warm-up',min:10,steps:['Open your notes or slides for this module.','Write down the exam date and the topics you know will come up.','That’s it. Ten minutes and you’re moving.']},
-  triage:{name:'Triage',min:30,steps:['List every topic from the module outline or lecture slides.','Mark each one: lime = I know it, orange = not sure, red = no idea.','Open past papers and star the topics that keep coming up.','Your order of attack: red and starred first, then orange.']},
-  feynman:{name:'Feynman',min:25,steps:['Pick your top red topic.','Explain it out loud or in writing, as if to a friend who never took the class.','Where you stall or go vague, that’s the gap. Go back to your notes for that point only.','Explain it again, simpler.']},
-  recall:{name:'Active recall',min:25,steps:['Make flashcards for your red and orange topics: question on the front, answer on the back.','Go through them without peeking. Say the answer before you flip.','Tap “Not sure” on anything shaky.']},
-  blurt:{name:'Blurting',min:20,steps:['Pick a topic and close everything.','Write everything you remember for 10 minutes.','Open your notes and mark what you missed. Each miss goes to tonight’s review.']},
-  outline:{name:'Answer outlines',min:30,steps:['Take 3 essay questions from past papers.','10 minutes each: thesis, three arguments with one example each, conclusion.','Structure only. No full sentences.']},
-  practice:{name:'Practice problems',min:40,steps:['Take past-paper problems on your red topics.','Time yourself. No notes on the first attempt.','Check the solution and redo every one you got wrong.']},
-  mcq:{name:'Practice questions',min:25,steps:['Do a set of multiple-choice questions on your weakest topics.','For every wrong answer, write one line on why the right one is right.']},
-  mock:{name:'Mock exam',min:60,steps:['Pick a past paper and set the real exam time.','Phone in another room. No notes.','When time is up, run the self-check.']},
-  essaymock:{name:'Full answer',min:45,steps:['Pick one past-paper essay question.','Write the full answer by hand, in exam time.','When time is up, run the self-check.']},
-  review:{name:'Quick review',min:15,steps:['Everything you got wrong or marked “Not sure” today is in this list.','Go through each item. Still shaky? It comes back tomorrow.','Got it? It turns lime and leaves the list.']}
+  warmup:{name:'Warm-up',min:10,mode:'focus',assess:'none',steps:['Open your notes or slides for this module.','Write down the exam date and the topics you know will come up.','That’s it. Ten minutes and you’re moving.']},
+  triage:{name:'Triage',min:30,mode:'tool',tool:'triage',steps:[]},
+  feynman:{name:'Feynman',min:25,mode:'focus',topic:'red',assess:'explain',steps:['Topic: {t}. Read your notes on it for 5 minutes, then close them.','Explain it out loud or in writing, as if to a friend who never took the class.','Where you stall or go vague, that’s a gap. Reopen your notes for that point only.','Explain it again, simpler. Then rate yourself.']},
+  recall:{name:'Flashcards',min:25,mode:'tool',tool:'cards',topic:'orange',steps:[]},
+  blurt:{name:'Blurting',min:20,mode:'focus',topic:'orange',assess:'blurt',steps:['Topic: {t}. Close everything.','Write everything you remember about it for 10 minutes.','Open your notes and count the key points you missed.']},
+  outline:{name:'Answer outlines',min:30,mode:'focus',topic:'any',assess:'check',steps:['Take 3 past-paper questions on {t}.','10 minutes each: thesis, three arguments with one example each, conclusion.','Structure only. Then run the self-check.']},
+  practice:{name:'Practice problems',min:40,mode:'focus',topic:'any',assess:'score',steps:['Take past-paper problems on {t}.','Time yourself. No notes on the first attempt.','Check the solutions and count how many you got right.']},
+  mcq:{name:'Practice questions',min:25,mode:'focus',topic:'orange',assess:'score',steps:['Do a set of multiple-choice questions on {t}.','For every wrong answer, write one line on why the right one is right.']},
+  mock:{name:'Mock exam',min:60,mode:'focus',assess:'score',steps:['Pick a past paper and set the real exam time.','Phone in another room. No notes.','When time is up, mark it and count how much you got right.']},
+  essaymock:{name:'Full answer',min:45,mode:'focus',assess:'check',steps:['Pick one past-paper essay question.','Write the full answer by hand, in exam time.','When time is up, run the self-check.']},
+  review:{name:'Quick review',min:15,mode:'tool',tool:'review',steps:[]}
 };
 
 const POOL = {
-  mcq:{learn:'recall',drill:['recall','mcq']},
-  essay:{learn:'feynman',drill:['blurt','outline']},
+  mcq:{learn:'feynman',drill:['recall','mcq']},
+  essay:{learn:'feynman',drill:['blurt','outline','recall']},
   problem:{learn:'feynman',drill:['practice','recall']},
   mix:{learn:'feynman',drill:['recall','outline','practice']}
 };
 
-let S = {screen:'welcome', qi:0, a:{}, plan:null, day:0, unsure:0, cur:null, done:{}};
+const fresh = () => ({screen:'welcome', view:'plan', qi:0, a:{}, plan:null, day:0, start:null, done:{}, cur:null,
+  topics:[], cards:[], xp:0, active:{}, pills:{}, sessTopic:{}});
+let S = fresh();
+let R = null;      // rewards collected in the current session or pill
+let CR = null;     // flashcard deck being reviewed
+let CP = 'make';   // flashcard tool phase: make | test
+const RANK = {red:0, orange:1, lime:2};
+const INT = {1:0, 2:1, 3:2, 4:4};
+const COLOR_NAME = {red:'No idea', orange:'Not sure', lime:'Got it'};
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Math.random().toString(36).slice(2,9);
+const buzz = (ms=12) => { try{ navigator.vibrate && navigator.vibrate(ms); }catch(e){} };
 
 function buildPlan(a){
   const D = +a.when, per = +a.hours, pool = POOL[a.type];
-  const days = [];
-  let di = 0, fey = 0;
+  const days = []; let di = 0;
   for(let d=0; d<D; d++){
     const list = [];
     const last = d===D-1 && D>1;
     const cap = last ? Math.max(2, per-1) : per;
-    if(d===0){
-      if(a.struggle==='start') list.push('warmup');
-      list.push('triage');
-    }
-    if(last){
-      if(a.grade!=='pass' || D>=3) list.push(a.type==='essay' ? 'essaymock' : 'mock');
-    }
+    if(d===0){ if(a.struggle==='start') list.push('warmup'); list.push('triage'); }
+    if(last && (a.grade!=='pass' || D>=3)) list.push(a.type==='essay' ? 'essaymock' : 'mock');
     let alt = 0;
     while(list.length < cap-1){
       const learnPhase = (a.covered==='none' && d < Math.ceil(D/2)) || (a.covered==='half' && d===0);
       if(a.struggle==='forget' && list.length===Math.floor(cap/2) && !list.includes('review')){ list.push('review'); continue; }
-      if(learnPhase && alt%2===0 && !last){ list.push(pool.learn); }
+      if(learnPhase && alt%2===0 && !last) list.push(pool.learn);
       else { list.push(pool.drill[di % pool.drill.length]); di++; }
       alt++;
     }
     list.push('review');
-    days.push(list.map(k=>{
-      const b = {...B[k], key:k};
-      if(k==='triage' && a.struggle==='prioritise') b.min = 40;
-      if(k==='feynman'){ fey++; b.label = `Feynman · red topic ${fey}`; }
-      return b;
-    }));
+    days.push(list.map(k => ({key:k, name:B[k].name, min: k==='triage' && a.struggle==='prioritise' ? 40 : B[k].min})));
   }
   return days;
 }
@@ -247,28 +336,140 @@ function reasons(a){
   return r;
 }
 
-const fmtDate = (off) => { const d = S.start ? new Date(S.start) : new Date(); d.setDate(d.getDate()+off); return d.toLocaleDateString('en-IE',{weekday:'short',day:'numeric',month:'short'}); };
-const mins = (list) => list.reduce((s,b)=>s+b.min,0);
-const hm = (m) => m>=60 ? `${Math.floor(m/60)}h${m%60?` ${m%60}m`:''}` : `${m} min`;
+const dayDate = off => { const d = S.start ? new Date(S.start) : new Date(); d.setDate(d.getDate()+off); return d; };
+const fmtDate = off => dayDate(off).toLocaleDateString('en-IE',{weekday:'short',day:'numeric',month:'short'});
+const dkey = d => d.toISOString().slice(0,10);
+const mins = list => list.reduce((s,b)=>s+b.min,0);
+const hm = m => m>=60 ? `${Math.floor(m/60)}h${m%60?` ${m%60}m`:''}` : `${m} min`;
 const examIn = () => ({'1':1,'3':3,'5':6,'7':10})[S.a.when];
+const lastDay = () => S.plan ? S.plan.length-1 : 0;
+const level = () => 1 + Math.floor(S.xp/250);
 
-function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200); }
-const KEY='crux-alpha-v1';
-function persist(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
-function restore(){
-  try{
-    const r = JSON.parse(localStorage.getItem(KEY)||'null');
-    if(!r || !r.plan) return;
-    S = r;
-    if(['session','checkin','building'].includes(S.screen)) S.screen='today';
-    const st = new Date(S.start); st.setHours(0,0,0,0);
-    const now = new Date(); now.setHours(0,0,0,0);
-    S.day = Math.min(Math.max(0, Math.round((now-st)/864e5)), S.plan.length-1);
-  }catch(e){}
+/* ---------- Topics ---------- */
+const topic = id => S.topics.find(t=>t.id===id);
+const byPriority = list => [...list].sort((x,y)=> RANK[x.status]-RANK[y.status] || (y.star?1:0)-(x.star?1:0));
+function pickTopic(pref){
+  if(!S.topics.length) return null;
+  let c = S.topics.filter(t=>t.status!=='lime'); if(!c.length) c = S.topics;
+  if(pref==='orange') c = [...c.filter(t=>t.status==='orange'), ...c.filter(t=>t.status!=='orange')];
+  c = pref==='orange' ? c.sort((x,y)=> (x.status==='orange'?0:1)-(y.status==='orange'?0:1) || (y.star?1:0)-(x.star?1:0)) : byPriority(c);
+  const used = Object.entries(S.sessTopic).filter(([k])=>k.startsWith(S.day+'-')).map(([,v])=>v);
+  return (c.find(t=>!used.includes(t.id)) || c[0]).id;
 }
-function go(screen){ S.screen=screen; render(); window.scrollTo(0,0); }
+function readiness(){
+  if(!S.topics.length) return 0;
+  const l = S.topics.filter(t=>t.status==='lime').length, o = S.topics.filter(t=>t.status==='orange').length;
+  return Math.round((l + o*.5)/S.topics.length*100);
+}
+function applyResult(tid, res){
+  const t = topic(tid); if(!t) return;
+  const from = t.status; t.hits = t.hits || [];
+  if(res==='good'){
+    if(from==='red') t.status='orange';
+    else if(from==='orange' && t.hits.some(d=>d!==S.day)) t.status='lime';
+    if(!t.hits.includes(S.day)) t.hits.push(S.day);
+  } else if(res==='partial'){
+    if(from==='red') t.status='orange';
+  } else {
+    t.status = from==='lime' ? 'orange' : 'red'; t.hits = [];
+  }
+  if(t.status!==from){
+    const up = RANK[t.status] > RANK[from];
+    R.changes.push({name:t.name, from, to:t.status});
+    if(up){ addXP(t.status==='lime' ? 60 : 25); if(t.status==='lime') R.mastered.push(t.name); }
+  } else if(res==='good' && from==='orange'){
+    R.changes.push({name:t.name, from, to:from, note:'Get it right again on another day to master it'});
+  }
+  if(res!=='good' && t.status!=='lime') R.gap = tid;
+}
 
-const brand = `<div class="brand"><svg viewBox="0 0 112 112" aria-hidden="true"><polygon points="56,0 64,48 112,56 64,64 56,112 48,64 0,56 48,48"/></svg>Crux <span class="alpha">alpha</span></div>`;
+/* ---------- XP, streak ---------- */
+function addXP(n){
+  const before = level();
+  S.xp += n; if(R) R.xp += n;
+  const f = document.createElement('div'); f.className='xpf'; f.textContent = `+${n} XP`;
+  document.body.appendChild(f); setTimeout(()=>f.remove(), 1000);
+  if(level() > before){ setTimeout(()=>toast(`Level up · Level ${level()}`), 400); buzz(40); }
+}
+function markActive(){ S.active[dkey(new Date())] = 1; }
+function streak(){
+  let n = 0; const d = new Date();
+  while(S.active[dkey(d)]){ n++; d.setDate(d.getDate()-1); }
+  return n;
+}
+
+/* ---------- Flashcards ---------- */
+function dueCards(){
+  const final = S.day === lastDay();
+  return S.cards.filter(c => c.due <= S.day || (final && c.box < 4))
+    .sort((x,y)=> x.box-y.box || y.miss-x.miss).map(c=>c.id);
+}
+function weakestCards(n){
+  return [...S.cards].sort((x,y)=> x.box-y.box || y.miss-x.miss || x.due-y.due).slice(0,n).map(c=>c.id);
+}
+function startDeck(ids, ctx, tid){ CR = {ids, i:0, flip:false, combo:0, best:0, ctx, tid, per:{}}; }
+function gradeCard(g){
+  const c = S.cards.find(x=>x.id===CR.ids[CR.i]); if(!c) return;
+  const later = CR.ctx!=='session';
+  const p = CR.per[c.tid] = CR.per[c.tid] || {n:0, s:0}; p.n++;
+  if(g==='got'){
+    c.box = Math.min(4, c.box+1); c.due = Math.min(lastDay(), S.day + INT[c.box]); c.got++; p.s += 1;
+    CR.combo++; CR.best = Math.max(CR.best, CR.combo); addXP(10); buzz(8);
+    if(CR.combo % 5 === 0){ addXP(15); toast(`Combo ×${CR.combo}`); buzz(30); }
+  } else {
+    c.box = 1; c.due = later ? Math.min(lastDay(), S.day+1) : S.day; CR.combo = 0;
+    if(g==='uns'){ p.s += .5; addXP(4); } else { c.miss++; addXP(2); }
+  }
+  R.cards++; R.best = Math.max(R.best, CR.best);
+  CR.i++; CR.flip = false;
+  if(CR.i >= CR.ids.length) finishDeck(); else { render(); popCard(); }
+}
+function finishDeck(){
+  if(CR.ctx !== 'pill'){
+    Object.entries(CR.per).forEach(([tid,p])=>{
+      if(CR.ctx==='review' && p.n < 2) return;
+      const acc = p.s/p.n; applyResult(tid, acc>=.8 ? 'good' : acc>=.5 ? 'partial' : 'bad');
+    });
+  }
+  if(CR.ctx==='pill') finishPill(); else completeSession(30);
+}
+
+/* ---------- Session lifecycle ---------- */
+const sKey = () => `${S.day}-${S.cur}`;
+const curBlock = () => S.plan[S.day][S.cur];
+const curTopicId = () => S.sessTopic[sKey()];
+function openSession(i){
+  S.cur = i; const b = curBlock(), def = B[b.key];
+  R = {xp:0, changes:[], best:0, cards:0, mastered:[], title:b.name, gap:null};
+  if(def.topic && !curTopicId()){ const t = pickTopic(def.topic); if(t) S.sessTopic[sKey()] = t; }
+  CP = 'make'; CR = null;
+  if(def.tool==='review'){ const ids = dueCards(); if(ids.length) startDeck(ids, 'review'); }
+  stopT(); T.total = b.min*60; T.left = T.total;
+  go('session');
+}
+function completeSession(base){
+  stopT();
+  S.done[sKey()] = true; addXP(base); markActive();
+  go('reward');
+}
+function finishPill(){
+  S.pills[S.day] = (S.pills[S.day]||0) + 1; addXP(20); markActive();
+  go('reward');
+}
+function startPill(){
+  R = {xp:0, changes:[], best:0, cards:0, mastered:[], title:'Pill done', gap:null, pill:true};
+  CR = null;
+  if(S.cards.length >= 3) startDeck(weakestCards(5), 'pill');
+  go('pill');
+}
+
+/* ---------- Views ---------- */
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200); }
+function go(screen){ S.screen=screen; render(); window.scrollTo(0,0); }
+const SPARK = '56,0 64,48 112,56 64,64 56,112 48,64 0,56 48,48';
+const brand = `<div class="brand"><svg viewBox="0 0 112 112" aria-hidden="true"><polygon points="${SPARK}"/></svg>Crux <span class="alpha">alpha</span></div>`;
+const cta = inner => `<div class="cta-wrap"><div class="cta-inner">${inner}</div></div>`;
+const dot = s => `<i class="tdot s-${s}"></i>`;
 
 function vWelcome(){ return `
   <section class="screen">
@@ -279,10 +480,9 @@ function vWelcome(){ return `
     <div class="steps-mini">
       <div><b>60s</b>Seven quick questions</div>
       <div><b>PLAN</b>A day-by-day plan built for your exam</div>
-      <div><b>GO</b>Guided sessions with a timer and clear steps</div>
+      <div><b>GO</b>Guided sessions, flashcards and daily pills</div>
     </div>
-  </section>
-  <div class="cta-wrap"><div class="cta-inner"><button class="btn btn-primary" data-act="start">Start</button></div></div>`; }
+  </section>${cta(`<button class="btn btn-primary" data-act="start">Start</button>`)}`; }
 
 function vQuiz(){
   const q = QUIZ[S.qi], sel = S.a[q.k];
@@ -297,8 +497,7 @@ function vQuiz(){
     <div class="options">
       ${q.o.map(([v,l,s])=>`<button class="opt" id="opt-${q.k}-${v}" data-act="pick" data-v="${v}" aria-pressed="${sel===v}"><span>${l}${s?`<small>${s}</small>`:''}</span><span class="dot"></span></button>`).join('')}
     </div>
-  </section>
-  <div class="cta-wrap"><div class="cta-inner"><button class="btn btn-primary" data-act="qnext" ${sel?'':'disabled'}>${S.qi===QUIZ.length-1?'Build my plan':'Continue'}</button></div></div>`;
+  </section>${cta(`<button class="btn btn-primary" data-act="qnext" ${sel?'':'disabled'}>${S.qi===QUIZ.length-1?'Build my plan':'Continue'}</button>`)}`;
 }
 
 function vBuilding(){ return `
@@ -321,11 +520,10 @@ function vReveal(){
       ${p.map((list,i)=>`<div class="day">
         <div class="day-head"><strong>Day ${i+1}${i===p.length-1&&p.length>1?' · lighter':''}</strong><span class="tag">${fmtDate(i)} · ${hm(mins(list))}</span></div>
         <div class="chips">${list.map(b=>`<span class="chip ${b.key==='review'?'rv':''}">${b.name}</span>`).join('')}</div>
-        ${i===p.length-1&&p.length>1?'<p class="tag">Sleep early. It helps the last two days stick.</p>':''}
       </div>`).join('')}
     </div>
-  </section>
-  <div class="cta-wrap"><div class="cta-inner"><button class="btn btn-primary" data-act="save">Save my plan</button></div></div>`;
+    <p class="note">Plus 3 two-minute pills a day to keep things fresh between sessions.</p>
+  </section>${cta(`<button class="btn btn-primary" data-act="save">Save my plan</button>`)}`;
 }
 
 function vSave(){ return `
@@ -334,79 +532,263 @@ function vSave(){ return `
     <h2>Save your plan</h2>
     <p class="lead">Create an account so your plan and progress stay with you. We’ll remind you when it’s time for your next session.</p>
     <p class="note">Alpha build: sign-in is simulated. Your plan and progress are saved on this device only.</p>
-  </section>
-  <div class="cta-wrap"><div class="cta-inner">
+  </section>${cta(`
     <button class="btn btn-primary" data-act="today">Continue with Apple</button>
     <button class="btn btn-ghost" data-act="today">Continue with Google</button>
-    <button class="btn btn-ghost" data-act="today">Continue with email</button>
-  </div></div>`; }
+    <button class="btn btn-ghost" data-act="today">Continue with email</button>`)}`; }
+
+function xpHeader(){
+  const within = S.xp % 250;
+  return `<div style="display:grid;gap:8px">
+    <div class="sec-h"><span class="lvl"><b>Lv ${level()}</b>${S.xp} XP</span><span class="tag">${250-within} XP to level ${level()+1}</span></div>
+    <div class="xpbar"><span style="width:${within/250*100}%"></span></div>
+  </div>`;
+}
+
+function topicRow(t, editable){
+  const n = S.cards.filter(c=>c.tid===t.id).length;
+  return `<div class="topic">
+    ${editable ? '' : dot(t.status)}
+    <div class="nm">${esc(t.name)}<small>${COLOR_NAME[t.status]}${t.star?' · comes up a lot':''}${n?` · ${n} card${n>1?'s':''}`:''}</small></div>
+    ${editable ? `<div class="cset" role="group" aria-label="Rate ${esc(t.name)}">${['red','orange','lime'].map(s=>`<button data-act="tset" data-id="${t.id}" data-v="${s}" aria-pressed="${t.status===s}" aria-label="${COLOR_NAME[s]}"><i class="s-${s}"></i></button>`).join('')}</div>
+    <button class="star" data-act="tstar" data-id="${t.id}" aria-pressed="${!!t.star}" aria-label="Comes up in past papers">★</button>
+    <button class="x" data-act="tdel" data-id="${t.id}" aria-label="Remove ${esc(t.name)}">×</button>` : ''}
+  </div>`;
+}
 
 function vToday(){
   const p = S.plan, list = p[S.day];
   const doneN = list.filter((_,i)=>S.done[`${S.day}-${i}`]).length;
   const next = list.findIndex((_,i)=>!S.done[`${S.day}-${i}`]);
   const left = examIn() - S.day;
-  return `
-  <section class="screen">
+  const pillsDone = S.pills[S.day] || 0;
+  const head = `
     <div class="bar">${brand}<button class="link" data-act="restart">Retake quiz</button></div>
     <div class="count"><span class="big">${left}</span><span>day${left>1?'s':''} to your exam<br><span class="tag">${fmtDate(S.day)}</span></span></div>
-    <div class="daytabs" role="tablist">${p.map((_,i)=>`<button role="tab" id="tab-${i}" data-act="day" data-v="${i}" aria-selected="${i===S.day}">Day ${i+1}</button>`).join('')}</div>
-    <div class="stats">
-      <div class="stat"><b>${doneN}/${list.length}</b><span>sessions done</span></div>
-      <div class="stat unsure"><b>${S.unsure}</b><span>items not sure yet</span></div>
+    ${xpHeader()}
+    <div class="stats3">
+      <div class="stat"><b>${doneN}/${list.length}</b><span>sessions</span></div>
+      <div class="stat hot"><b>${streak()}</b><span>day streak</span></div>
+      <div class="stat"><b>${readiness()}%</b><span>exam ready</span></div>
     </div>
+    <div class="seg" role="tablist">
+      <button role="tab" data-act="view" data-v="plan" aria-selected="${S.view==='plan'}">Plan</button>
+      <button role="tab" data-act="view" data-v="topics" aria-selected="${S.view==='topics'}">Topics · ${S.topics.length}</button>
+    </div>`;
+
+  if(S.view==='topics'){
+    const c = s => S.topics.filter(t=>t.status===s).length, tot = S.topics.length || 1;
+    return `<section class="screen">${head}
+      <div class="ready"><span class="big">${readiness()}%</span><span class="tag">exam ready</span></div>
+      <div class="stack">${['lime','orange','red'].map(s=>`<i class="s-${s}" style="width:${c(s)/tot*100}%"></i>`).join('')}</div>
+      <div class="legend">${['lime','orange','red'].map(s=>`<span>${dot(s)}${COLOR_NAME[s]} · ${c(s)}</span>`).join('')}</div>
+      ${S.topics.length ? `<div class="list">${byPriority(S.topics).map(t=>topicRow(t,true)).join('')}</div>`
+        : `<p class="note">No topics yet. They get added in your Triage session, or you can add them here.</p>`}
+      <div class="addrow"><input class="field" id="tp-in" placeholder="Add a topic, e.g. Market structures" autocomplete="off"><button class="btn-sm" data-act="tadd">Add</button></div>
+    </section>`;
+  }
+
+  return `<section class="screen">${head}
+    <div class="daytabs" role="tablist">${p.map((_,i)=>`<button role="tab" id="tab-${i}" data-act="day" data-v="${i}" aria-selected="${i===S.day}">Day ${i+1}</button>`).join('')}</div>
+    <div class="sec-h"><h3>Pills</h3><span class="tag">${pillsDone}/3 · 2 min each</span></div>
+    <div class="pills">${['Morning','Midday','Evening'].map((l,k)=>`<button class="pillcard ${k<pillsDone?'done':''}" data-act="pill" ${k!==pillsDone?'disabled':''}>
+      <span class="ic">${k<pillsDone?'✓':k+1}</span><strong>${l}</strong><span>${k<pillsDone?'+20 XP':k===pillsDone?'Ready':'Later'}</span></button>`).join('')}</div>
+    <div class="sec-h"><h3>Sessions</h3><span class="tag">${hm(mins(list))}</span></div>
     <div class="list">
-      ${list.map((b,i)=>{ const done=S.done[`${S.day}-${i}`]; return `
-        <button class="row ${done?'done':''} ${i===next?'next':''}" data-act="open" data-v="${i}">
+      ${list.map((b,i)=>{ const k=`${S.day}-${i}`, done=S.done[k], t=topic(S.sessTopic[k]);
+        const sub = b.key==='review' ? `${dueCards().length} cards due` : t ? esc(t.name) : B[b.key].topic ? 'Picks your next priority topic' : '';
+        return `<button class="row ${done?'done':''} ${i===next?'next':''}" data-act="open" data-v="${i}">
           <span class="n">${done?'✓':i+1}</span>
-          <span class="t"><strong>${b.label||b.name}</strong><span>${b.min} min${b.key==='review'?` · ${S.unsure} items`:''}</span></span>
+          <span class="t"><strong>${b.name}</strong><span>${b.min} min${sub?` · ${sub}`:''}</span></span>
           <span class="go">${done?'Redo':i===next?'Start':''}</span>
         </button>`; }).join('')}
     </div>
-    ${next===-1?'<p class="note">Day done. Close the app and rest. Sleep is part of the plan.</p>':''}
+    ${next===-1?'<p class="note">Day done. Rest now. Sleep is when today’s work sticks.</p>':''}
   </section>
-  ${next>-1?`<div class="cta-wrap"><div class="cta-inner"><button class="btn btn-primary" data-act="open" data-v="${next}">Start next session · ${list[next].min} min</button></div></div>`:''}`;
+  ${next>-1?cta(`<button class="btn btn-primary" data-act="open" data-v="${next}">Start next session · ${list[next].min} min</button>`):''}`;
 }
 
+/* ---------- Session screen ---------- */
 let T = {left:0,total:0,run:false,h:null,fast:false};
-function vSession(){
-  const b = S.plan[S.day][S.cur];
-  return `
-  <section class="screen">
-    <div class="bar">
-      <button class="back" data-act="exit" aria-label="Leave session">←</button>
-      <span class="tag">Day ${S.day+1} · session ${S.cur+1}</span>
-      <label class="toggle"><input type="checkbox" id="fast" ${T.fast?'checked':''}> fast demo</label>
-    </div>
-    <div class="timer-zone">
-      <div class="s-orb ${T.run?'running':'paused'}" id="orb" aria-hidden="true"></div>
-      <div class="time" id="time" aria-live="off">${clock(T.left)}</div>
-    </div>
-    <div style="display:grid;gap:8px;text-align:center">
-      <h2>${b.label||b.name}</h2>
-      ${b.key==='review'?`<p class="tag">${S.unsure} item${S.unsure===1?'':'s'} to go through</p>`:''}
-    </div>
-    <div class="tbar"><span id="tbar"></span></div>
-    <div class="tmeta"><span id="elapsed">${clock(T.total-T.left)}</span><span>${clock(T.total)}</span></div>
-    <div class="controls">
-      <button class="round" data-act="reset" aria-label="Restart timer">↺</button>
-      <button class="play" data-act="toggle" aria-label="${T.run?'Pause':'Play'}" id="playbtn">${T.run?pauseIco:playIco}</button>
-      <button class="round" data-act="finish" aria-label="Finish session">Done</button>
-    </div>
-    <ol class="howto">${b.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
-  </section>
-  <div class="cta-wrap"><div class="cta-inner"><button class="btn unsure-btn" data-act="unsure">Not sure about this one</button></div></div>`;
-}
 const playIco = '<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>';
 const pauseIco = '<svg viewBox="0 0 24 24"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z"/></svg>';
 const clock = s => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
 
+function topicPicker(){
+  if(!S.topics.length) return `<p class="note">Add your topics first in the Topics tab, so each session targets one.</p>`;
+  const cur = curTopicId();
+  return `<label class="target" for="sel-topic">${dot(topic(cur)?.status||'red')}
+    <select id="sel-topic">${byPriority(S.topics).map(t=>`<option value="${t.id}" ${t.id===cur?'selected':''}>${esc(t.name)}</option>`).join('')}</select>
+    <span class="tag">change</span></label>`;
+}
+
+function vTriage(){
+  return `
+    <p class="lead">List every topic from your module outline or lecture slides, then rate each one honestly. Star the ones that keep coming up in past papers.</p>
+    <div class="legend">${['red','orange','lime'].map(s=>`<span>${dot(s)}${COLOR_NAME[s]}</span>`).join('')}<span>★ Comes up a lot</span></div>
+    <div class="addrow"><input class="field" id="tp-in" placeholder="e.g. Market structures" autocomplete="off"><button class="btn-sm" data-act="tadd">Add</button></div>
+    <div class="list">${S.topics.map(t=>topicRow(t,true)).join('')}</div>`;
+}
+
+function vDeck(){
+  const c = S.cards.find(x=>x.id===CR.ids[CR.i]); const t = topic(c?.tid);
+  return `
+    <div class="deck-top"><span class="tag">Card ${CR.i+1}/${CR.ids.length}</span><span class="combo ${CR.combo>=3?'on':''}">Combo ×${CR.combo}</span></div>
+    <div class="fcard" id="fcard">
+      <span class="tag">${esc(t?.name||'')}</span>
+      <div class="q">${esc(c?.q)}</div>
+      ${CR.flip?`<div class="ans" id="ans">${esc(c?.a)}</div>`:''}
+    </div>
+    <p class="tag" style="text-align:center">${CR.flip?'Be honest. Only “Got it” if you said it before flipping.':'Say the answer out loud before you flip.'}</p>`;
+}
+const deckCta = () => CR.flip
+  ? `<div class="grade"><button class="g-miss" data-act="grade" data-v="miss">Missed</button><button class="g-uns" data-act="grade" data-v="uns">Not sure</button><button class="g-got" data-act="grade" data-v="got">Got it</button></div>`
+  : `<button class="btn btn-primary" data-act="flip">Show answer</button>`;
+
+function vMakerBody(tid){
+  const mine = S.cards.filter(c=>c.tid===tid);
+  return `
+    <p class="note">One idea per card. Write the question in your own words, keep the answer short.</p>
+    <input class="field" id="cq" placeholder="Front: question" autocomplete="off">
+    <input class="field" id="ca" placeholder="Back: answer" autocomplete="off">
+    <button class="btn btn-ghost" data-act="addcard">Add card</button>
+    ${mine.length?`<div class="sec-h"><h3>${mine.length} card${mine.length>1?'s':''} on this topic</h3></div>
+    <div class="mini-list">${mine.slice(-4).reverse().map(c=>`<div>${esc(c.q)}</div>`).join('')}</div>`:''}`;
+}
+
+function vSession(){
+  const b = curBlock(), def = B[b.key];
+  const t = topic(curTopicId());
+  const head = `<div class="bar">
+      <button class="back" data-act="exit" aria-label="Leave session">←</button>
+      <span class="tag">Day ${S.day+1} · ${b.name}</span>
+      <label class="toggle"><input type="checkbox" id="fast" ${T.fast?'checked':''}> fast demo</label>
+    </div>`;
+
+  if(def.mode==='focus'){
+    const steps = def.steps.map(s=>s.replace('{t}', t ? `<b>${esc(t.name)}</b>` : 'your weakest topic'));
+    return `<section class="screen">${head}
+      <div class="timer-zone">
+        <div class="s-orb ${T.run?'running':'paused'}" id="orb" aria-hidden="true"></div>
+        <div class="time" id="time">${clock(T.left)}</div>
+      </div>
+      <h2 style="text-align:center">${b.name}</h2>
+      ${def.topic ? topicPicker() : ''}
+      <div class="tbar"><span id="tbar"></span></div>
+      <div class="tmeta"><span id="elapsed">${clock(T.total-T.left)}</span><span>${clock(T.total)}</span></div>
+      <div class="controls">
+        <button class="round" data-act="reset" aria-label="Restart timer">↺</button>
+        <button class="play" data-act="toggle" aria-label="${T.run?'Pause':'Play'}" id="playbtn">${T.run?pauseIco:playIco}</button>
+        <button class="round" data-act="finish" aria-label="Finish session">Done</button>
+      </div>
+      <ol class="howto">${steps.map(s=>`<li><span>${s}</span></li>`).join('')}</ol>
+    </section>${cta(`<button class="btn btn-primary" data-act="finish">Finish and rate it</button>`)}`;
+  }
+
+  const ctimer = `<div class="ctimer">
+      <button class="mini-play" data-act="toggle" aria-label="${T.run?'Pause':'Play'}" id="playbtn">${T.run?pauseIco:playIco}</button>
+      <span class="ct" id="time">${clock(T.left)}</span>
+      <div class="tbar"><span id="tbar"></span></div>
+    </div>`;
+
+  if(def.tool==='triage'){
+    return `<section class="screen">${head}${ctimer}<h2>Map your topics</h2>${vTriage()}</section>
+      ${cta(`<button class="btn btn-primary" data-act="triagedone" ${S.topics.length?'':'disabled'}>Done · ${S.topics.length} topic${S.topics.length===1?'':'s'}</button>`)}`;
+  }
+
+  if(def.tool==='cards'){
+    if(CP==='test' && CR) return `<section class="screen">${head}${vDeck()}</section>${cta(deckCta())}`;
+    const n = S.cards.filter(c=>c.tid===curTopicId()).length;
+    return `<section class="screen">${head}${ctimer}<h2>Make your cards</h2>${topicPicker()}${t?vMakerBody(t.id):''}</section>
+      ${cta(`<button class="btn btn-primary" data-act="testcards" ${n?'':'disabled'}>Test yourself · ${n} card${n===1?'':'s'}</button>`)}`;
+  }
+
+  if(def.tool==='review'){
+    if(CR) return `<section class="screen">${head}<h2>Quick review</h2>${vDeck()}</section>${cta(deckCta())}`;
+    const weak = byPriority(S.topics.filter(t=>t.status!=='lime')).slice(0,3);
+    return `<section class="screen">${head}${ctimer}<h2>Quick review</h2>
+      <p class="lead">No cards due right now. Do a 60-second blurt on each of these: write everything you remember, then check your notes.</p>
+      <div class="list">${weak.map(t=>topicRow(t,false)).join('') || '<p class="note">Add topics and cards so reviews have something to work with.</p>'}</div>
+    </section>${cta(`<button class="btn btn-primary" data-act="reviewdone">Done</button>`)}`;
+  }
+}
+
+/* ---------- Self-rating ---------- */
+const ASSESS = {
+  explain:{q:'Could you explain {t} without your notes?', o:[['good','Yes','Clear and complete'],['partial','Partly','Got stuck once or twice'],['bad','No','Still lost']]},
+  blurt:{q:'How many key points about {t} did you miss?', o:[['good','None','I remembered it all'],['partial','1 or 2','Small gaps'],['bad','3 or more','Big gaps']]},
+  score:{q:'How many did you get right?', o:[['good','Most','80% or more'],['partial','About half',''],['bad','Few','Less than half']]}
+};
+const CHECK = ['I answered exactly what the question asked','My main point is clear at the start','Every argument has an example or evidence','I used the module’s concepts and authors','There’s a conclusion that closes the answer'];
+
+function vAssess(){
+  const b = curBlock(), def = B[b.key], t = topic(curTopicId());
+  const tn = t ? esc(t.name) : 'it';
+  if(def.assess==='check') return `
+    <section class="screen">
+      <div class="bar"><span class="tag">Self-check · ${b.name}</span></div>
+      <h2>Mark what your answer did</h2>
+      <div class="checklist">${CHECK.map((c,i)=>`<label for="sc-${i}"><input type="checkbox" id="sc-${i}" class="sc"> ${c}</label>`).join('')}</div>
+    </section>${cta(`<button class="btn btn-primary" data-act="checkdone">Save</button>`)}`;
+  const A = ASSESS[def.assess];
+  return `
+    <section class="screen">
+      <div class="bar"><span class="tag">Rate it · ${b.name}</span></div>
+      <h2>${A.q.replace('{t}', tn)}</h2>
+      <div class="choices">${A.o.map(([v,l,s])=>`<button data-act="rate" data-v="${v}">${dot(v==='good'?'lime':v==='partial'?'orange':'red')}<span style="display:grid;color:var(--fg)">${l}<span>${s}</span></span></button>`).join('')}</div>
+    </section>`;
+}
+
+/* ---------- Reward ---------- */
+function vReward(){
+  return `
+  <section class="screen">
+    <div class="bar"><span class="tag">${R.pill?'Pill complete':'Session complete'}</span><span class="lvl"><b>Lv ${level()}</b></span></div>
+    <svg class="done-mark" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28"/><path d="M20 33 l8 8 l16 -18"/></svg>
+    <div><div class="xp-big" id="xpbig">${R.xp}</div><span class="tag">XP earned · ${S.xp} total</span></div>
+    ${R.mastered.map(n=>`<div class="mastered"><svg viewBox="0 0 112 112"><polygon points="${SPARK}"/></svg><span class="tag">Topic mastered</span><h2>${esc(n)}</h2></div>`).join('')}
+    ${R.changes.length?`<div class="changes">${R.changes.map(c=>`<div class="change"><span class="nm">${esc(c.name)}${c.note?`<br><span class="tag">${c.note}</span>`:''}</span><span class="arr">${dot(c.from)}${c.from!==c.to?`→ ${dot(c.to)}`:''}</span></div>`).join('')}</div>`:''}
+    <div class="stats3">
+      <div class="stat"><b>${R.cards}</b><span>cards</span></div>
+      <div class="stat"><b>×${R.best}</b><span>best combo</span></div>
+      <div class="stat hot"><b>${streak()}</b><span>day streak</span></div>
+    </div>
+    ${xpHeader()}
+  </section>${cta(`<button class="btn btn-primary" data-act="today">Continue</button>${R.gap&&topic(R.gap)?`<button class="btn btn-ghost" data-act="maker">Turn the gaps into flashcards</button>`:''}`)}`;
+}
+
+function vMaker(){
+  const t = topic(R.gap);
+  return `<section class="screen">
+    <div class="bar"><button class="back" data-act="today" aria-label="Back">←</button><span class="tag">Fix the gaps</span></div>
+    <h2>${esc(t?.name)}</h2>${t?vMakerBody(t.id):''}
+  </section>${cta(`<button class="btn btn-primary" data-act="today">Save and continue</button>`)}`;
+}
+
+function vPill(){
+  const head = `<div class="bar"><button class="back" data-act="today" aria-label="Back">←</button><span class="tag">Pill · 2 min</span></div>`;
+  if(CR) return `<section class="screen">${head}<h2>Quick hit</h2>${vDeck()}</section>${cta(deckCta())}`;
+  const w = byPriority(S.topics)[0];
+  if(!w) return `<section class="screen">${head}<h2>Add your topics first</h2><p class="lead">Pills pull from your topics and flashcards. Map your topics in the Topics tab.</p></section>
+    ${cta(`<button class="btn btn-primary" data-act="gotopics">Go to topics</button>`)}`;
+  return `<section class="screen">${head}
+    <h2>Without looking, write down 3 key facts about ${esc(w.name)}.</h2>
+    <p class="lead">Use your phone’s notes or a scrap of paper. Then check them against your notes.</p>
+    <div class="choices">
+      <button data-act="pillrate" data-id="${w.id}" data-v="good">${dot('lime')}<span style="display:grid">Got all 3</span></button>
+      <button data-act="pillrate" data-id="${w.id}" data-v="partial">${dot('orange')}<span style="display:grid">Got 1 or 2</span></button>
+      <button data-act="pillrate" data-id="${w.id}" data-v="bad">${dot('red')}<span style="display:grid">Got none</span></button>
+    </div>
+  </section>`;
+}
+
+/* ---------- Timer ---------- */
 function tick(){
   T.left = Math.max(0, T.left - (T.fast?30:1));
   const t=document.getElementById('time'); if(t) t.textContent = clock(T.left);
   const e=document.getElementById('elapsed'); if(e) e.textContent = clock(T.total-T.left);
   const bar=document.getElementById('tbar'); if(bar) bar.style.width = ((T.total-T.left)/T.total*100)+'%';
-  if(T.left===0){ stopT(); toast('Time’s up. Nice work.'); go('checkin'); }
+  if(T.left===0){ stopT(); toast('Time’s up. Nice work.'); buzz(60); if(B[curBlock().key].mode==='focus') toAssess(); }
 }
 function startT(){ if(T.run) return; T.run=true; T.h=setInterval(tick,1000); syncT(); }
 function stopT(){ T.run=false; clearInterval(T.h); syncT(); }
@@ -414,38 +796,24 @@ function syncT(){
   const o=document.getElementById('orb'); if(o) o.className='s-orb '+(T.run?'running':'paused');
   const p=document.getElementById('playbtn'); if(p){ p.innerHTML=T.run?pauseIco:playIco; p.setAttribute('aria-label',T.run?'Pause':'Play'); }
 }
-
-function vCheckin(){
-  const b = S.plan[S.day][S.cur];
-  const selfcheck = ['essaymock','outline','mock'].includes(b.key);
-  return `
-  <section class="screen">
-    <div class="bar"><span class="tag">Session complete</span></div>
-    <svg class="done-mark" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28"/><path d="M20 33 l8 8 l16 -18"/></svg>
-    <h2>How did it go?</h2>
-    <p class="lead">${b.label||b.name} · ${b.min} min</p>
-    ${selfcheck?`<div class="checklist">
-      <p class="tag">Self-check. Each “no” goes to tonight’s review.</p>
-      ${['I answered exactly what the question asked','My main point is clear at the start','Every argument has an example or evidence','I used the module’s concepts and authors','There’s a conclusion that closes the answer'].map((c,i)=>`<label for="sc-${i}"><input type="checkbox" id="sc-${i}" class="sc"> ${c}</label>`).join('')}
-    </div>`:''}
-    <div class="feel">
-      <button data-act="feel" data-v="easy">Easy<span>Moving on</span></button>
-      <button data-act="feel" data-v="ok">OK<span>Keep the plan</span></button>
-      <button data-act="feel" data-v="hard">Hard<span>Add a review</span></button>
-    </div>
-  </section>`;
+function toAssess(){
+  stopT();
+  const def = B[curBlock().key];
+  if(def.assess==='none') completeSession(30); else go('assess');
 }
 
 /* ---------- Motion (anime.js v4) ---------- */
 const FX = () => !!window.anime && !matchMedia('(prefers-reduced-motion: reduce)').matches;
 let lastScene = '';
 let busy = false;
-
+let morphing = false;
 function riseChars(el, delay=0, step=14){
+  if(!el) return;
   const { chars } = anime.splitText(el, { chars: { wrap: 'clip' } });
   return anime.animate(chars, { y: ['110%','0%'], duration: 700, ease: 'out(4)', delay: anime.stagger(step, {start: delay}) });
 }
 function riseWords(el, delay=0){
+  if(!el) return;
   const { words } = anime.splitText(el, { words: { wrap: 'clip' } });
   return anime.animate(words, { y: ['110%','0%'], duration: 800, ease: 'out(4)', delay: anime.stagger(55, {start: delay}) });
 }
@@ -454,12 +822,12 @@ function fadeUp(sel, start=0, step=60, dist=18){
   anime.animate(els, { opacity: [0,1], y: [dist,0], duration: 600, ease: 'out(3)', delay: anime.stagger(step, {start}) });
 }
 function countUp(el, to, ms=900){
+  if(!el) return;
   const t0 = performance.now();
   const f = now => { const k = Math.min(1,(now-t0)/ms); el.textContent = Math.round(to*(1-Math.pow(1-k,3))); if(k<1) requestAnimationFrame(f); };
   el.textContent = '0'; requestAnimationFrame(f);
 }
-
-let morphing = false;
+function popCard(){ if(FX()) anime.animate('#fcard', { opacity:[0,1], y:[18,0], scale:[.97,1], duration:380, ease:'out(3)' }); }
 function starPoints(){
   const u = anime.utils, total = u.random(4, 40), r1 = u.random(8, 50), r2 = 56;
   const l = total % 2 ? total + 1 : total; let pts = '';
@@ -477,34 +845,25 @@ function morphSettle(){
   morphing = false;
   const a = document.getElementById('morph-a'), b = document.getElementById('morph-b');
   if(!a || !b || !FX()) return;
-  anime.utils.set(b, { points: '56,0 64,48 112,56 64,64 56,112 48,64 0,56 48,48' });
+  anime.utils.set(b, { points: SPARK });
   anime.animate(a, { points: anime.svg.morphTo(b), ease: 'out(4)', duration: 700 });
   anime.animate('.morph', { rotate: [0, 90], scale: [1, 1.12, 1], duration: 900, ease: 'inOut(3)' });
 }
-
 function quizOut(next, dir){
   if(!FX() || busy){ next(); return; }
   busy = true;
-  const h = document.querySelector('.screen h2'), opts = document.querySelectorAll('.opt');
-  const targets = [h, ...opts].filter(Boolean);
+  const targets = [document.querySelector('.screen h2'), ...document.querySelectorAll('.opt')].filter(Boolean);
   anime.animate(targets, { opacity: [1,0], y: [0, dir>0 ? -14 : 14], duration: 260, ease: 'in(2)', delay: anime.stagger(25),
     onComplete: () => { busy = false; next(); } });
 }
-
 function animateScene(){
   if(!FX()) return;
-  const scene = S.screen + (S.screen==='quiz' ? S.qi : S.screen==='today' ? S.day : '');
+  const scene = S.screen + (S.screen==='quiz' ? S.qi : S.screen==='today' ? S.day+S.view : S.screen==='session' ? sKey() : '');
   if(scene === lastScene) return;
   lastScene = scene;
   try{
-    if(S.screen==='welcome'){
-      riseWords(document.querySelector('h1'), 150);
-      fadeUp('.lead', 600); fadeUp('.steps-mini div', 800, 90);
-    }
-    if(S.screen==='quiz'){
-      riseChars(document.querySelector('.screen h2'), 0, 12);
-      fadeUp('.opt', 220, 70, 22);
-    }
+    if(S.screen==='welcome'){ riseWords(document.querySelector('h1'), 150); fadeUp('.lead', 600); fadeUp('.steps-mini div', 800, 90); }
+    if(S.screen==='quiz'){ riseChars(document.querySelector('.screen h2'), 0, 12); fadeUp('.opt', 220, 70, 22); }
     if(S.screen==='building'){
       anime.animate('.build-orb', { scale: [0.2,1], opacity: [0,1], duration: 900, ease: 'out(4)' });
       anime.animate('.morph', { scale: [0,1], duration: 700, ease: 'out(4)' });
@@ -512,34 +871,73 @@ function animateScene(){
     }
     if(S.screen==='reveal'){
       const big = document.querySelector('.count .big'); if(big) countUp(big, +big.textContent);
-      fadeUp('.count > span:last-child', 300);
-      fadeUp('.why div', 500, 110, 12);
-      fadeUp('.day', 900, 90, 24);
+      fadeUp('.why div', 500, 110, 12); fadeUp('.day', 900, 90, 24);
     }
-    if(S.screen==='save'){ riseChars(document.querySelector('h2'), 0, 18); fadeUp('.lead, .note', 300, 80); }
-    if(S.screen==='today'){ fadeUp('.stat', 0, 60, 10); fadeUp('.row', 120, 45, 12); }
-    if(S.screen==='session'){ anime.animate('.s-orb', { scale: [0.6,1], opacity: [0,1], duration: 900, ease: 'out(4)' }); fadeUp('.howto li', 300, 80, 10); }
-    if(S.screen==='checkin'){
+    if(S.screen==='today'){ fadeUp('.stat', 0, 60, 10); fadeUp('.pillcard', 80, 60, 10); fadeUp('.row, .topic', 160, 40, 12); }
+    if(S.screen==='session'){ if(document.querySelector('.s-orb')) anime.animate('.s-orb', { scale: [0.6,1], opacity: [0,1], duration: 900, ease: 'out(4)' }); fadeUp('.howto li', 300, 80, 10); popCard(); }
+    if(S.screen==='assess'){ riseChars(document.querySelector('h2'), 0, 14); fadeUp('.choices button, .checklist label', 250, 60); }
+    if(S.screen==='reward'){
       anime.animate(anime.svg.createDrawable('.done-mark circle'), { draw: ['0 0','0 1'], duration: 700, ease: 'inOut(3)' });
       anime.animate(anime.svg.createDrawable('.done-mark path'), { draw: ['0 0','0 1'], duration: 450, delay: 550, ease: 'out(3)' });
-      riseChars(document.querySelector('h2'), 0, 20); fadeUp('.feel button, .checklist label', 250, 60); }
+      countUp(document.getElementById('xpbig'), R.xp, 1100);
+      anime.animate('.mastered', { scale: [.6,1], opacity: [0,1], duration: 900, delay: 500, ease: 'out(4)' });
+      anime.animate('.mastered svg', { rotate: [0, 180], scale: [0, 1.2, 1], duration: 1200, delay: 600, ease: 'out(4)' });
+      fadeUp('.change', 700, 90, 12); fadeUp('.stats3 .stat', 900, 70, 10);
+    }
+    if(S.screen==='pill'){ popCard(); fadeUp('.choices button', 200, 60); }
+  }catch(e){}
+}
+
+/* ---------- Persistence ---------- */
+const KEY='crux-alpha-v1';
+function persist(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function restore(){
+  try{
+    const r = JSON.parse(localStorage.getItem(KEY)||'null');
+    if(!r || !r.plan) return;
+    S = Object.assign(fresh(), r);
+    if(['session','assess','reward','pill','maker','building'].includes(S.screen)) S.screen='today';
+    const st = new Date(S.start || Date.now()); st.setHours(0,0,0,0);
+    const now = new Date(); now.setHours(0,0,0,0);
+    S.day = Math.min(Math.max(0, Math.round((now-st)/864e5)), S.plan.length-1);
   }catch(e){}
 }
 
 function render(){
-  const v = {welcome:vWelcome,quiz:vQuiz,building:vBuilding,reveal:vReveal,save:vSave,today:vToday,session:vSession,checkin:vCheckin}[S.screen]();
+  const v = {welcome:vWelcome,quiz:vQuiz,building:vBuilding,reveal:vReveal,save:vSave,today:vToday,session:vSession,assess:vAssess,reward:vReward,maker:vMaker,pill:vPill}[S.screen]();
   document.getElementById('app').innerHTML = v;
   persist();
-  animateScene();
   if(S.screen==='session'){
     const bar=document.getElementById('tbar'); if(bar) bar.style.width=((T.total-T.left)/T.total*100)+'%';
     const f=document.getElementById('fast'); if(f) f.onchange=()=>{T.fast=f.checked;};
+    const sel=document.getElementById('sel-topic'); if(sel) sel.onchange=()=>{ S.sessTopic[sKey()] = sel.value; render(); };
   }
+  animateScene();
 }
 
+/* ---------- Actions ---------- */
+function addTopic(){
+  const i = document.getElementById('tp-in'); const name = i && i.value.trim(); if(!name) return;
+  S.topics.push({id:uid(), name, status:'red', star:false, hits:[]});
+  buzz(6); render(); const n = document.getElementById('tp-in'); if(n) n.focus();
+}
+function addCard(tid){
+  const q = document.getElementById('cq'), a = document.getElementById('ca');
+  if(!q || !a || !q.value.trim() || !a.value.trim()){ toast('Fill in both sides of the card'); return; }
+  S.cards.push({id:uid(), tid, q:q.value.trim(), a:a.value.trim(), box:1, due:S.day, got:0, miss:0});
+  addXP(5); buzz(6); render(); const n = document.getElementById('cq'); if(n) n.focus();
+}
+
+document.addEventListener('keydown', e=>{
+  if(e.key!=='Enter') return;
+  if(e.target.id==='tp-in'){ e.preventDefault(); addTopic(); }
+  if(e.target.id==='cq'){ e.preventDefault(); const a=document.getElementById('ca'); if(a) a.focus(); }
+  if(e.target.id==='ca'){ e.preventDefault(); addCard(S.screen==='maker' ? R.gap : curTopicId()); }
+});
+
 document.addEventListener('click', e=>{
-  const el = e.target.closest('[data-act]'); if(!el) return;
-  const act = el.dataset.act, v = el.dataset.v;
+  const el = e.target.closest('[data-act]'); if(!el || el.disabled) return;
+  const act = el.dataset.act, v = el.dataset.v, id = el.dataset.id;
   if(act==='start'){ S.qi=0; go('quiz'); }
   else if(act==='pick'){
     S.a[QUIZ[S.qi].k]=v; persist();
@@ -551,7 +949,9 @@ document.addEventListener('click', e=>{
   else if(act==='qnext'){
     if(S.qi<QUIZ.length-1){ quizOut(()=>{ S.qi++; render(); }, 1); }
     else {
-      S.plan = buildPlan(S.a); S.day=0; S.done={}; S.unsure=0; S.start=new Date().toISOString();
+      const keep = {topics:S.topics, cards:S.cards, xp:S.xp, active:S.active};
+      S = Object.assign(fresh(), {a:S.a}, keep);
+      S.plan = buildPlan(S.a); S.start = new Date().toISOString();
       go('building');
       const lines=['Analysing your answers…','Picking the right techniques…','Spreading sessions across your days…','Your plan is ready.'];
       lines.forEach((l,i)=>setTimeout(()=>{ const b=document.getElementById('bline'); if(!b) return; b.textContent=l; if(FX()) riseChars(b, 0, 10); if(i===lines.length-1) morphSettle(); },i*900));
@@ -560,35 +960,40 @@ document.addEventListener('click', e=>{
   }
   else if(act==='save') go('save');
   else if(act==='toReveal') go('reveal');
-  else if(act==='today') go('today');
-  else if(act==='restart'){ try{localStorage.removeItem(KEY)}catch(e){} S={screen:'welcome',qi:0,a:{},plan:null,day:0,unsure:0,cur:null,done:{}}; lastScene=''; render(); }
+  else if(act==='today'){ stopT(); go('today'); }
+  else if(act==='restart'){ try{localStorage.removeItem(KEY)}catch(err){} S=fresh(); lastScene=''; render(); }
   else if(act==='day'){ S.day=+v; render(); }
-  else if(act==='open'){
-    S.cur=+v; const b=S.plan[S.day][S.cur];
-    stopT(); T.total=b.min*60; T.left=T.total; go('session');
-  }
+  else if(act==='view'){ S.view=v; render(); }
+  else if(act==='gotopics'){ S.view='topics'; go('today'); }
+  else if(act==='open') openSession(+v);
   else if(act==='toggle'){ T.run?stopT():startT(); }
   else if(act==='reset'){ stopT(); T.left=T.total; render(); }
   else if(act==='exit'){ stopT(); go('today'); }
-  else if(act==='finish'){ stopT(); go('checkin'); }
-  else if(act==='unsure'){ S.unsure++; toast(`Added to tonight’s quick review · ${S.unsure} item${S.unsure===1?'':'s'}`); }
-  else if(act==='feel'){
+  else if(act==='finish') toAssess();
+  else if(act==='tadd') addTopic();
+  else if(act==='tset'){ const t=topic(id); if(t){ t.status=v; buzz(6); render(); } }
+  else if(act==='tstar'){ const t=topic(id); if(t){ t.star=!t.star; buzz(6); render(); } }
+  else if(act==='tdel'){ S.topics=S.topics.filter(t=>t.id!==id); S.cards=S.cards.filter(c=>c.tid!==id); render(); }
+  else if(act==='triagedone'){ addXP(5*S.topics.length); completeSession(30); }
+  else if(act==='addcard') addCard(S.screen==='maker' ? R.gap : curTopicId());
+  else if(act==='testcards'){ const ids = S.cards.filter(c=>c.tid===curTopicId()).map(c=>c.id); startDeck(ids,'session',curTopicId()); CP='test'; render(); popCard(); }
+  else if(act==='flip'){ CR.flip=true; render(); if(FX()) anime.animate('#ans',{opacity:[0,1],y:[10,0],duration:300,ease:'out(3)'}); }
+  else if(act==='grade') gradeCard(v);
+  else if(act==='reviewdone') completeSession(15);
+  else if(act==='rate'){ const tid=curTopicId(); if(tid) applyResult(tid, v); completeSession(30); }
+  else if(act==='checkdone'){
     const misses = document.querySelectorAll('.sc:not(:checked)').length;
-    if(misses){ S.unsure+=misses; }
-    S.done[`${S.day}-${S.cur}`]=true;
-    const b=S.plan[S.day][S.cur];
-    if(b.key==='review') S.unsure = 0;
-    if(v==='hard' && S.plan[S.day+1]){
-      const nd=S.plan[S.day+1]; nd.splice(nd.length-1,0,{...B.review,key:'review',min:10,name:'Extra review'});
-      toast('Noted. We added a review to tomorrow.');
-    } else if(misses){ toast(`${misses} point${misses>1?'s':''} added to tonight’s review`); }
-    else toast(v==='easy'?'Nice. On to the next one.':'Logged. Keep going.');
-    go('today');
+    const tid = curTopicId(); if(tid) applyResult(tid, misses<=1 ? 'good' : misses<=3 ? 'partial' : 'bad');
+    completeSession(30);
   }
+  else if(act==='maker') go('maker');
+  else if(act==='pill') startPill();
+  else if(act==='pillrate'){ applyResult(id, v); finishPill(); }
 });
 
 restore();
 render();
 </script>
+
 </body>
 </html>

@@ -1,29 +1,32 @@
-# Crux — Alpha v1
+# Crux — Alpha v2
 
-Exam-prep app for university students in Ireland. The student answers a 7-question quiz and gets a day-by-day study plan, then the app guides each session with a timer and clear steps.
+Exam-prep app for university students in Ireland. The student answers a 7-question quiz and gets a day-by-day study plan, then the app guides every session, tracks what they know and brings weak points back until exam day.
 
 > Working name. Alpha build for functional testing only.
 
 ## What's in this version
 
 - **Onboarding quiz** — exam date, hours per day, exam type, content covered, target grade, biggest struggle, study time
-- **Plan generation** — sessions picked from the quiz answers (triage, Feynman, active recall, blurting, answer outlines, practice problems, mock exam, quick review)
-- **Plan reveal** — day-by-day plan with the reason behind each choice
-- **Today screen** — countdown to the exam, sessions of the day, progress
-- **Session mode** — timer, step-by-step instructions, "Not sure" button that sends items to the end-of-day quick review
-- **Check-in** — Easy / OK / Hard after each session; "Hard" adds a review to the next day; essay sessions include a self-check
-
-- **Motion** — quiz text and transitions with anime.js v4 (splitText, SVG morph, drawable check); respects the phone's reduce-motion setting
+- **Plan generation** — sessions picked from the quiz answers (triage, Feynman, flashcards, blurting, answer outlines, practice problems, mock exam, quick review)
+- **Topic map** — in Triage the student lists the module's topics and rates each one: no idea / not sure / got it, plus a star for topics that keep coming up in past papers
+- **Sessions tied to topics** — each session targets one topic, in attack order (no idea + starred first)
+- **Technique by topic state** — no idea → Feynman first; not sure → flashcards, blurting or questions; got it → only in reviews
+- **Self-rating after every technique** — updates the topic's colour; a topic only turns "got it" after a good result on two different days
+- **Flashcards in the app** — create, test, grade Missed / Not sure / Got it
+- **Spaced review** — cards move through 4 boxes; missed and unsure cards come back the same evening or next day; the last day reviews everything not yet solid
+- **Daily pills** — 3 two-minute quick hits per day using the weakest cards, or a 3-facts recall prompt
+- **Rewards** — XP, levels, card combos, day streak, exam readiness %, "topic mastered" moment, reward screen after each session
+- **Motion** — anime.js v4 (splitText, SVG morph, drawable check); respects the phone's reduce-motion setting
 
 ## Known limits (alpha)
 
 - Plan and progress are saved in the browser on this device only (no account, no sync)
 - Sign-in is simulated
-- Flashcards can't be created inside the app yet
+- No push notifications yet: pills are shown in the app, not sent to the phone
 - "Fast demo" toggle in session mode speeds the timer up for testing
 
 ## How to test
 
-Open `index.html` on a phone, or enable GitHub Pages (Settings → Pages → deploy from `main`, root folder) and open the generated link.
+Live: https://studyappav1.vercel.app
 
 Best test: use it for a real exam, follow the plan to exam day, and note where you stopped, what you skipped and what felt confusing.
