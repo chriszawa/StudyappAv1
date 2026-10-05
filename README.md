@@ -16,6 +16,7 @@ Exam-prep app for university students in Ireland. The student answers a 7-questi
 - **Spaced review** — cards move through 4 boxes; missed and unsure cards come back the same evening or next day; the last day reviews everything not yet solid
 - **Daily pills** — 3 two-minute quick hits per day using the weakest cards, or a 3-facts recall prompt
 - **Rewards** — XP, levels, card combos, day streak, exam readiness %, "topic mastered" moment, reward screen after each session
+- **Languages** — English and Brazilian Portuguese; EN/PT toggle at the top, opens in Portuguese when the phone is set to Portuguese
 - **Motion** — anime.js v4 (splitText, SVG morph, drawable check); respects the phone's reduce-motion setting
 
 ## Known limits (alpha)

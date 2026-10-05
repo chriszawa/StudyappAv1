@@ -162,6 +162,7 @@ p{margin:0}
 
 .opt .dot{transition:transform .2s}
 .split-wrap{display:inline-block}
+.langbtn{font-family:var(--mono);font-size:11px;letter-spacing:.08em;padding:5px 9px;border-radius:8px;border:1px solid var(--line);color:var(--muted)}
 
 /* XP, levels, streak */
 .lvl{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--muted)}
@@ -257,29 +258,187 @@ p{margin:0}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-const QUIZ = [
-  {k:'when', q:'When is your exam?', o:[['1','Tomorrow'],['3','In 2–3 days'],['5','In 4–7 days'],['7','In 1–2 weeks']]},
-  {k:'hours', q:'How many hours a day can you realistically study?', o:[['2','Less than 1 hour'],['3','1–2 hours'],['5','2–4 hours'],['7','4+ hours']]},
-  {k:'type', q:'What kind of exam is it?', o:[['mcq','Multiple choice'],['essay','Written answers / essays'],['problem','Problem-solving / calculations'],['mix','A mix']]},
-  {k:'covered', q:'How much of the content have you already covered?', o:[['none','Barely started'],['half','About half'],['most','Most of it','I just need to revise']]},
-  {k:'grade', q:'What grade do you need?', o:[['pass','Just to pass'],['solid','A solid grade'],['top','A top grade']]},
-  {k:'struggle', q:'What’s your biggest struggle right now?', o:[['start','Getting started'],['focus','Staying focused'],['prioritise','Not knowing what to prioritise'],['forget','Forgetting what I studied']]},
-  {k:'slot', q:'When can you study?', o:[['Morning','Mornings'],['Afternoon','Afternoons'],['Evening','Evenings'],['Late night','After work / late night']]}
-];
+/* ---------- Language ---------- */
+const I18N = {
+en: {
+  locale:'en-IE',
+  quiz:[
+    {k:'when', q:'When is your exam?', o:[['1','Tomorrow'],['3','In 2–3 days'],['5','In 4–7 days'],['7','In 1–2 weeks']]},
+    {k:'hours', q:'How many hours a day can you realistically study?', o:[['2','Less than 1 hour'],['3','1–2 hours'],['5','2–4 hours'],['7','4+ hours']]},
+    {k:'type', q:'What kind of exam is it?', o:[['mcq','Multiple choice'],['essay','Written answers / essays'],['problem','Problem-solving / calculations'],['mix','A mix']]},
+    {k:'covered', q:'How much of the content have you already covered?', o:[['none','Barely started'],['half','About half'],['most','Most of it','I just need to revise']]},
+    {k:'grade', q:'What grade do you need?', o:[['pass','Just to pass'],['solid','A solid grade'],['top','A top grade']]},
+    {k:'struggle', q:'What’s your biggest struggle right now?', o:[['start','Getting started'],['focus','Staying focused'],['prioritise','Not knowing what to prioritise'],['forget','Forgetting what I studied']]},
+    {k:'slot', q:'When can you study?', o:[['Morning','Mornings'],['Afternoon','Afternoons'],['Evening','Evenings'],['Late night','After work / late night']]}
+  ],
+  slot:{Morning:'morning',Afternoon:'afternoon',Evening:'evening','Late night':'late night'},
+  blocks:{
+    warmup:{name:'Warm-up',steps:['Open your notes or slides for this module.','Write down the exam date and the topics you know will come up.','That’s it. Ten minutes and you’re moving.']},
+    triage:{name:'Triage'},
+    feynman:{name:'Feynman',steps:['Topic: {t}. Read your notes on it for 5 minutes, then close them.','Explain it out loud or in writing, as if to a friend who never took the class.','Where you stall or go vague, that’s a gap. Reopen your notes for that point only.','Explain it again, simpler. Then rate yourself.']},
+    recall:{name:'Flashcards'},
+    blurt:{name:'Blurting',steps:['Topic: {t}. Close everything.','Write everything you remember about it for 10 minutes.','Open your notes and count the key points you missed.']},
+    outline:{name:'Answer outlines',steps:['Take 3 past-paper questions on {t}.','10 minutes each: thesis, three arguments with one example each, conclusion.','Structure only. Then run the self-check.']},
+    practice:{name:'Practice problems',steps:['Take past-paper problems on {t}.','Time yourself. No notes on the first attempt.','Check the solutions and count how many you got right.']},
+    mcq:{name:'Practice questions',steps:['Do a set of multiple-choice questions on {t}.','For every wrong answer, write one line on why the right one is right.']},
+    mock:{name:'Mock exam',steps:['Pick a past paper and set the real exam time.','Phone in another room. No notes.','When time is up, mark it and count how much you got right.']},
+    essaymock:{name:'Full answer',steps:['Pick one past-paper essay question.','Write the full answer by hand, in exam time.','When time is up, run the self-check.']},
+    review:{name:'Quick review'}
+  },
+  reasons:{
+    type:{mcq:'Multiple choice rewards fast recall, so most sessions are flashcards and practice questions.',essay:'Essays reward structure, so you’ll explain topics out loud and outline answers against the clock.',problem:'Calculations reward reps, so most sessions are timed past-paper problems.',mix:'Your exam mixes formats, so sessions rotate between recall, outlines and problems.'},
+    covered:{none:'You’re starting from scratch, so the first days focus on understanding your red topics.',half:'You’ve covered half, so day one fills the gaps before drilling starts.',most:'You’ve seen most of it, so you skip straight to testing yourself.'},
+    struggle:{start:'You struggle to start, so each plan opens with a 10-minute warm-up.',focus:'Focus is the hard part, so every session is a fixed timer with your phone away.',prioritise:'Prioritising is the hard part, so triage gets 40 minutes on day one.',forget:'You forget fast, so we added extra quick reviews mid-day.'},
+    pass:'You need a pass, so triage cuts the topics least likely to come up.',
+    top:'You’re aiming high, so the plan ends with a full mock exam.'
+  },
+  color:{red:'No idea', orange:'Not sure', lime:'Got it'},
+  assess:{
+    explain:{q:'Could you explain {t} without your notes?', o:[['good','Yes','Clear and complete'],['partial','Partly','Got stuck once or twice'],['bad','No','Still lost']]},
+    blurt:{q:'How many key points about {t} did you miss?', o:[['good','None','I remembered it all'],['partial','1 or 2','Small gaps'],['bad','3 or more','Big gaps']]},
+    score:{q:'How many did you get right?', o:[['good','Most','80% or more'],['partial','About half',''],['bad','Few','Less than half']]}
+  },
+  check:['I answered exactly what the question asked','My main point is clear at the start','Every argument has an example or evidence','I used the module’s concepts and authors','There’s a conclusion that closes the answer'],
+  building:['Analysing your answers…','Picking the right techniques…','Spreading sessions across your days…','Your plan is ready.'],
+  pills:['Morning','Midday','Evening'],
+  s:{
+    heroA:'Exam coming up?', heroB:'Let’s get you ready.',
+    heroLead:'Tell us how much time you have. We’ll build a plan and guide you through every session until exam day.',
+    mini1:'Seven quick questions', mini2:'A day-by-day plan built for your exam', mini3:'Guided sessions, flashcards and daily pills',
+    start:'Start', back:'Back', cont:'Continue', buildPlan:'Build my plan',
+    yourPlan:'Your plan', daysTo:'days to your exam', dayTo:'day to your exam',
+    planMeta:'{n}-day plan · {slot} sessions', day:'Day', lighter:'lighter',
+    pillsNote:'Plus 3 two-minute pills a day to keep things fresh between sessions.', savePlan:'Save my plan',
+    saveH:'Save your plan', saveLead:'Create an account so your plan and progress stay with you. We’ll remind you when it’s time for your next session.',
+    saveNote:'Alpha build: sign-in is simulated. Your plan and progress are saved on this device only.',
+    apple:'Continue with Apple', google:'Continue with Google', email:'Continue with email',
+    xpTo:'{n} XP to level {l}', retake:'Retake quiz', sessions:'sessions', streak:'day streak', ready:'exam ready',
+    plan:'Plan', topics:'Topics', pillsH:'Pills', pillsMeta:'{n}/3 · 2 min each', pillReady:'Ready', pillLater:'Later',
+    sessionsH:'Sessions', cardsDue:'{n} cards due', picksTopic:'Picks your next priority topic', redo:'Redo',
+    dayDone:'Day done. Rest now. Sleep is when today’s work sticks.', startNext:'Start next session · {m} min',
+    noTopics:'No topics yet. They get added in your Triage session, or you can add them here.',
+    addTopicPh:'Add a topic, e.g. Market structures', add:'Add', comesUp:'comes up a lot', starLabel:'Comes up a lot',
+    card:'card', cards:'cards', change:'change', addTopicsFirst:'Add your topics first in the Topics tab, so each session targets one.',
+    triageLead:'List every topic from your module outline or lecture slides, then rate each one honestly. Star the ones that keep coming up in past papers.',
+    triagePh:'e.g. Market structures', mapH:'Map your topics', triageDone:'Done · {n} topics', triageDone1:'Done · 1 topic',
+    cardN:'Card {i}/{n}', combo:'Combo ×{n}', honest:'Be honest. Only “Got it” if you said it before flipping.', sayFirst:'Say the answer out loud before you flip.',
+    missed:'Missed', notSure:'Not sure', gotIt:'Got it', showAns:'Show answer',
+    cardTip:'One idea per card. Write the question in your own words, keep the answer short.',
+    frontPh:'Front: question', backPh:'Back: answer', addCard:'Add card', onTopic:'{n} {c} on this topic',
+    fast:'fast demo', leave:'Leave session', restart:'Restart timer', finishLabel:'Finish session', done:'Done', play:'Play', pause:'Pause',
+    weakestTopic:'your weakest topic', finishRate:'Finish and rate it', makeCards:'Make your cards', testYourself:'Test yourself · {n} {c}',
+    reviewH:'Quick review', noDue:'No cards due right now. Do a 60-second blurt on each of these: write everything you remember, then check your notes.',
+    noReview:'Add topics and cards so reviews have something to work with.',
+    selfCheck:'Self-check', markWhat:'Mark what your answer did', save:'Save', rateIt:'Rate it', it:'it',
+    pillDone:'Pill complete', sessDone:'Session complete', xpEarned:'XP earned · {n} total', mastered:'Topic mastered',
+    bestCombo:'best combo', gaps:'Turn the gaps into flashcards', fixGaps:'Fix the gaps', saveCont:'Save and continue',
+    pillTag:'Pill · 2 min', quickHit:'Quick hit', addFirstH:'Add your topics first', addFirstP:'Pills pull from your topics and flashcards. Map your topics in the Topics tab.',
+    goTopics:'Go to topics', threeFacts:'Without looking, write down 3 key facts about {t}.', threeLead:'Use your phone’s notes or a scrap of paper. Then check them against your notes.',
+    got3:'Got all 3', got12:'Got 1 or 2', got0:'Got none',
+    timeUp:'Time’s up. Nice work.', levelUp:'Level up · Level {n}', fillBoth:'Fill in both sides of the card',
+    againNote:'Get it right again on another day to master it', rate:'Rate {t}', remove:'Remove {t}', lang:'PT'
+  }
+},
+pt: {
+  locale:'pt-BR',
+  quiz:[
+    {k:'when', q:'Quando é a sua prova?', o:[['1','Amanhã'],['3','Em 2–3 dias'],['5','Em 4–7 dias'],['7','Em 1–2 semanas']]},
+    {k:'hours', q:'Quantas horas por dia você consegue estudar de verdade?', o:[['2','Menos de 1 hora'],['3','1–2 horas'],['5','2–4 horas'],['7','Mais de 4 horas']]},
+    {k:'type', q:'Como é a prova?', o:[['mcq','Múltipla escolha'],['essay','Dissertativa'],['problem','Exercícios / cálculos'],['mix','Um pouco de tudo']]},
+    {k:'covered', q:'Quanto do conteúdo você já viu?', o:[['none','Quase nada'],['half','Mais ou menos metade'],['most','Quase tudo','Só preciso revisar']]},
+    {k:'grade', q:'Que nota você precisa?', o:[['pass','Só passar'],['solid','Uma nota boa'],['top','Uma nota alta']]},
+    {k:'struggle', q:'Qual é a sua maior dificuldade agora?', o:[['start','Começar'],['focus','Manter o foco'],['prioritise','Saber o que priorizar'],['forget','Esquecer o que estudei']]},
+    {k:'slot', q:'Quando você consegue estudar?', o:[['Morning','De manhã'],['Afternoon','À tarde'],['Evening','À noite'],['Late night','Depois do trabalho / de madrugada']]}
+  ],
+  slot:{Morning:'de manhã',Afternoon:'à tarde',Evening:'à noite','Late night':'de madrugada'},
+  blocks:{
+    warmup:{name:'Aquecimento',steps:['Abra suas anotações ou os slides da matéria.','Anote a data da prova e os tópicos que você sabe que vão cair.','Pronto. Dez minutos e você já está em movimento.']},
+    triage:{name:'Triagem'},
+    feynman:{name:'Feynman',steps:['Tópico: {t}. Leia suas anotações sobre ele por 5 minutos e feche.','Explique em voz alta ou por escrito, como se fosse para um amigo que nunca viu a matéria.','Onde você travar ou enrolar, ali está a lacuna. Volte nas anotações só nesse ponto.','Explique de novo, mais simples. Depois se avalie.']},
+    recall:{name:'Flashcards'},
+    blurt:{name:'Blurting',steps:['Tópico: {t}. Feche tudo.','Escreva tudo o que você lembra sobre ele por 10 minutos.','Abra suas anotações e conte quantos pontos importantes ficaram de fora.']},
+    outline:{name:'Esqueletos de resposta',steps:['Pegue 3 questões de provas antigas sobre {t}.','10 minutos cada: tese, três argumentos com um exemplo cada, conclusão.','Só a estrutura. Depois faça a autocorreção.']},
+    practice:{name:'Exercícios',steps:['Pegue exercícios de provas antigas sobre {t}.','Cronometre. Sem consulta na primeira tentativa.','Confira as resoluções e conte quantos você acertou.']},
+    mcq:{name:'Questões',steps:['Resolva uma lista de questões de múltipla escolha sobre {t}.','Para cada erro, escreva uma linha explicando por que a certa é a certa.']},
+    mock:{name:'Simulado',steps:['Escolha uma prova antiga e marque o tempo real da prova.','Celular em outro cômodo. Sem consulta.','Quando acabar o tempo, corrija e conte quanto você acertou.']},
+    essaymock:{name:'Resposta completa',steps:['Escolha uma questão dissertativa de prova antiga.','Escreva a resposta completa à mão, no tempo da prova.','Quando acabar o tempo, faça a autocorreção.']},
+    review:{name:'Revisão relâmpago'}
+  },
+  reasons:{
+    type:{mcq:'Múltipla escolha premia quem lembra rápido, então a maior parte das sessões é de flashcards e questões.',essay:'Prova dissertativa premia estrutura, então você vai explicar os tópicos em voz alta e montar respostas no tempo.',problem:'Cálculo se aprende repetindo, então a maior parte das sessões é de exercícios de provas antigas, cronometrados.',mix:'Sua prova mistura formatos, então as sessões alternam entre flashcards, esqueletos de resposta e exercícios.'},
+    covered:{none:'Você está começando do zero, então os primeiros dias focam em entender os tópicos vermelhos.',half:'Você já viu metade, então o primeiro dia fecha as lacunas antes de começar a treinar.',most:'Você já viu quase tudo, então vai direto para o teste.'},
+    struggle:{start:'Começar é o mais difícil para você, então todo plano abre com um aquecimento de 10 minutos.',focus:'O foco é o mais difícil, então toda sessão tem timer fixo e celular longe.',prioritise:'Priorizar é o mais difícil, então a triagem ganha 40 minutos no primeiro dia.',forget:'Você esquece rápido, então colocamos revisões extras no meio do dia.'},
+    pass:'Você só precisa passar, então a triagem corta os tópicos com menos chance de cair.',
+    top:'Você quer nota alta, então o plano termina com um simulado completo.'
+  },
+  color:{red:'Não sei', orange:'Incerto', lime:'Domino'},
+  assess:{
+    explain:{q:'Você conseguiu explicar {t} sem olhar as anotações?', o:[['good','Sim','Claro e completo'],['partial','Em parte','Travei uma ou duas vezes'],['bad','Não','Ainda estou perdido']]},
+    blurt:{q:'Quantos pontos importantes de {t} ficaram de fora?', o:[['good','Nenhum','Lembrei de tudo'],['partial','1 ou 2','Pequenas lacunas'],['bad','3 ou mais','Lacunas grandes']]},
+    score:{q:'Quanto você acertou?', o:[['good','A maioria','80% ou mais'],['partial','Mais ou menos metade',''],['bad','Pouco','Menos da metade']]}
+  },
+  check:['Respondi exatamente o que a questão pediu','Minha ideia principal está clara logo no início','Cada argumento tem um exemplo ou evidência','Usei os conceitos e autores da matéria','Tem uma conclusão que fecha a resposta'],
+  building:['Analisando suas respostas…','Escolhendo as técnicas certas…','Distribuindo as sessões pelos seus dias…','Seu plano está pronto.'],
+  pills:['Manhã','Meio-dia','Noite'],
+  s:{
+    heroA:'Tem prova chegando?', heroB:'Bora te preparar.',
+    heroLead:'Conta quanto tempo você tem. A gente monta um plano e te guia em cada sessão até o dia da prova.',
+    mini1:'Sete perguntas rápidas', mini2:'Um plano dia a dia feito para a sua prova', mini3:'Sessões guiadas, flashcards e pílulas diárias',
+    start:'Começar', back:'Voltar', cont:'Continuar', buildPlan:'Montar meu plano',
+    yourPlan:'Seu plano', daysTo:'dias até a prova', dayTo:'dia até a prova',
+    planMeta:'Plano de {n} dias · sessões {slot}', day:'Dia', lighter:'mais leve',
+    pillsNote:'E mais 3 pílulas de 2 minutos por dia para manter tudo fresco entre as sessões.', savePlan:'Salvar meu plano',
+    saveH:'Salve seu plano', saveLead:'Crie uma conta para o seu plano e o seu progresso ficarem com você. A gente te avisa quando for hora da próxima sessão.',
+    saveNote:'Versão alpha: o login é simulado. Seu plano e seu progresso ficam salvos só neste aparelho.',
+    apple:'Continuar com Apple', google:'Continuar com Google', email:'Continuar com e-mail',
+    xpTo:'faltam {n} XP para o nível {l}', retake:'Refazer quiz', sessions:'sessões', streak:'dias seguidos', ready:'pronto p/ prova',
+    plan:'Plano', topics:'Tópicos', pillsH:'Pílulas', pillsMeta:'{n}/3 · 2 min cada', pillReady:'Liberada', pillLater:'Depois',
+    sessionsH:'Sessões', cardsDue:'{n} cards para revisar', picksTopic:'Escolhe seu próximo tópico prioritário', redo:'Refazer',
+    dayDone:'Dia concluído. Agora descansa. É dormindo que o estudo de hoje fixa.', startNext:'Começar próxima sessão · {m} min',
+    noTopics:'Nenhum tópico ainda. Eles entram na sessão de Triagem, ou você pode adicionar aqui.',
+    addTopicPh:'Adicione um tópico, ex.: Estruturas de mercado', add:'Adicionar', comesUp:'cai sempre', starLabel:'Cai sempre',
+    card:'card', cards:'cards', change:'trocar', addTopicsFirst:'Adicione seus tópicos na aba Tópicos para cada sessão atacar um deles.',
+    triageLead:'Liste todos os tópicos da ementa ou dos slides e avalie cada um com sinceridade. Marque com estrela os que sempre caem nas provas antigas.',
+    triagePh:'ex.: Estruturas de mercado', mapH:'Mapeie seus tópicos', triageDone:'Pronto · {n} tópicos', triageDone1:'Pronto · 1 tópico',
+    cardN:'Card {i}/{n}', combo:'Combo ×{n}', honest:'Seja sincero. Só marque “Acertei” se respondeu antes de virar.', sayFirst:'Responda em voz alta antes de virar.',
+    missed:'Errei', notSure:'Incerto', gotIt:'Acertei', showAns:'Ver resposta',
+    cardTip:'Uma ideia por card. Escreva a pergunta com suas palavras e deixe a resposta curta.',
+    frontPh:'Frente: pergunta', backPh:'Verso: resposta', addCard:'Adicionar card', onTopic:'{n} {c} neste tópico',
+    fast:'demo rápida', leave:'Sair da sessão', restart:'Reiniciar timer', finishLabel:'Encerrar sessão', done:'Fim', play:'Iniciar', pause:'Pausar',
+    weakestTopic:'seu tópico mais fraco', finishRate:'Encerrar e avaliar', makeCards:'Crie seus cards', testYourself:'Testar agora · {n} {c}',
+    reviewH:'Revisão relâmpago', noDue:'Nenhum card para revisar agora. Faça um blurting de 60 segundos em cada um destes: escreva tudo o que lembra e depois confira nas anotações.',
+    noReview:'Adicione tópicos e cards para a revisão ter com o que trabalhar.',
+    selfCheck:'Autocorreção', markWhat:'Marque o que sua resposta fez', save:'Salvar', rateIt:'Avalie', it:'o tópico',
+    pillDone:'Pílula concluída', sessDone:'Sessão concluída', xpEarned:'XP ganho · {n} no total', mastered:'Tópico dominado',
+    bestCombo:'maior combo', gaps:'Transformar as lacunas em flashcards', fixGaps:'Feche as lacunas', saveCont:'Salvar e continuar',
+    pillTag:'Pílula · 2 min', quickHit:'Rapidinha', addFirstH:'Adicione seus tópicos primeiro', addFirstP:'As pílulas usam seus tópicos e flashcards. Mapeie seus tópicos na aba Tópicos.',
+    goTopics:'Ir para tópicos', threeFacts:'Sem olhar, escreva 3 fatos importantes sobre {t}.', threeLead:'Use o bloco de notas do celular ou um papel. Depois confira nas suas anotações.',
+    got3:'Acertei os 3', got12:'Acertei 1 ou 2', got0:'Não lembrei nenhum',
+    timeUp:'Acabou o tempo. Mandou bem.', levelUp:'Subiu de nível · Nível {n}', fillBoth:'Preencha os dois lados do card',
+    againNote:'Acerte de novo em outro dia para dominar', rate:'Avaliar {t}', remove:'Remover {t}', lang:'EN'
+  }
+}};
+const L = () => I18N[S.lang] || I18N.en;
+const tr = (k, v={}) => (L().s[k] ?? I18N.en.s[k] ?? k).replace(/\{(\w+)\}/g, (_,x)=> v[x] ?? '');
+const QZ = () => L().quiz;
+const bname = k => L().blocks[k].name;
+const bsteps = k => L().blocks[k].steps || [];
+const defaultLang = () => { try{ return (navigator.language||'').toLowerCase().startsWith('pt') ? 'pt' : 'en'; }catch(e){ return 'en'; } };
+const langBtn = () => `<button class="langbtn" data-act="lang" aria-label="Language">${tr('lang')}</button>`;
 
 /* mode: focus = big timer + steps, then a self-rating. tool = work happens inside the app. */
 const B = {
-  warmup:{name:'Warm-up',min:10,mode:'focus',assess:'none',steps:['Open your notes or slides for this module.','Write down the exam date and the topics you know will come up.','That’s it. Ten minutes and you’re moving.']},
-  triage:{name:'Triage',min:30,mode:'tool',tool:'triage',steps:[]},
-  feynman:{name:'Feynman',min:25,mode:'focus',topic:'red',assess:'explain',steps:['Topic: {t}. Read your notes on it for 5 minutes, then close them.','Explain it out loud or in writing, as if to a friend who never took the class.','Where you stall or go vague, that’s a gap. Reopen your notes for that point only.','Explain it again, simpler. Then rate yourself.']},
-  recall:{name:'Flashcards',min:25,mode:'tool',tool:'cards',topic:'orange',steps:[]},
-  blurt:{name:'Blurting',min:20,mode:'focus',topic:'orange',assess:'blurt',steps:['Topic: {t}. Close everything.','Write everything you remember about it for 10 minutes.','Open your notes and count the key points you missed.']},
-  outline:{name:'Answer outlines',min:30,mode:'focus',topic:'any',assess:'check',steps:['Take 3 past-paper questions on {t}.','10 minutes each: thesis, three arguments with one example each, conclusion.','Structure only. Then run the self-check.']},
-  practice:{name:'Practice problems',min:40,mode:'focus',topic:'any',assess:'score',steps:['Take past-paper problems on {t}.','Time yourself. No notes on the first attempt.','Check the solutions and count how many you got right.']},
-  mcq:{name:'Practice questions',min:25,mode:'focus',topic:'orange',assess:'score',steps:['Do a set of multiple-choice questions on {t}.','For every wrong answer, write one line on why the right one is right.']},
-  mock:{name:'Mock exam',min:60,mode:'focus',assess:'score',steps:['Pick a past paper and set the real exam time.','Phone in another room. No notes.','When time is up, mark it and count how much you got right.']},
-  essaymock:{name:'Full answer',min:45,mode:'focus',assess:'check',steps:['Pick one past-paper essay question.','Write the full answer by hand, in exam time.','When time is up, run the self-check.']},
-  review:{name:'Quick review',min:15,mode:'tool',tool:'review',steps:[]}
+  warmup:{min:10,mode:'focus',assess:'none'},
+  triage:{min:30,mode:'tool',tool:'triage'},
+  feynman:{min:25,mode:'focus',topic:'red',assess:'explain'},
+  recall:{min:25,mode:'tool',tool:'cards',topic:'orange'},
+  blurt:{min:20,mode:'focus',topic:'orange',assess:'blurt'},
+  outline:{min:30,mode:'focus',topic:'any',assess:'check'},
+  practice:{min:40,mode:'focus',topic:'any',assess:'score'},
+  mcq:{min:25,mode:'focus',topic:'orange',assess:'score'},
+  mock:{min:60,mode:'focus',assess:'score'},
+  essaymock:{min:45,mode:'focus',assess:'check'},
+  review:{min:15,mode:'tool',tool:'review'}
 };
 
 const POOL = {
@@ -289,7 +448,7 @@ const POOL = {
   mix:{learn:'feynman',drill:['recall','outline','practice']}
 };
 
-const fresh = () => ({screen:'welcome', view:'plan', qi:0, a:{}, plan:null, day:0, start:null, done:{}, cur:null,
+const fresh = () => ({lang:defaultLang(), screen:'welcome', view:'plan', qi:0, a:{}, plan:null, day:0, start:null, done:{}, cur:null,
   topics:[], cards:[], xp:0, active:{}, pills:{}, sessTopic:{}});
 let S = fresh();
 let R = null;      // rewards collected in the current session or pill
@@ -297,7 +456,7 @@ let CR = null;     // flashcard deck being reviewed
 let CP = 'make';   // flashcard tool phase: make | test
 const RANK = {red:0, orange:1, lime:2};
 const INT = {1:0, 2:1, 3:2, 4:4};
-const COLOR_NAME = {red:'No idea', orange:'Not sure', lime:'Got it'};
+const COLOR_NAME = new Proxy({}, {get:(_,k)=>L().color[k]});
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid = () => Math.random().toString(36).slice(2,9);
@@ -321,23 +480,20 @@ function buildPlan(a){
       alt++;
     }
     list.push('review');
-    days.push(list.map(k => ({key:k, name:B[k].name, min: k==='triage' && a.struggle==='prioritise' ? 40 : B[k].min})));
+    days.push(list.map(k => ({key:k, min: k==='triage' && a.struggle==='prioritise' ? 40 : B[k].min})));
   }
   return days;
 }
 
 function reasons(a){
-  const r = [];
-  r.push({mcq:'Multiple choice rewards fast recall, so most sessions are flashcards and practice questions.',essay:'Essays reward structure, so you’ll explain topics out loud and outline answers against the clock.',problem:'Calculations reward reps, so most sessions are timed past-paper problems.',mix:'Your exam mixes formats, so sessions rotate between recall, outlines and problems.'}[a.type]);
-  r.push({none:'You’re starting from scratch, so the first days focus on understanding your red topics.',half:'You’ve covered half, so day one fills the gaps before drilling starts.',most:'You’ve seen most of it, so you skip straight to testing yourself.'}[a.covered]);
-  r.push({start:'You struggle to start, so each plan opens with a 10-minute warm-up.',focus:'Focus is the hard part, so every session is a fixed timer with your phone away.',prioritise:'Prioritising is the hard part, so triage gets 40 minutes on day one.',forget:'You forget fast, so we added extra quick reviews mid-day.'}[a.struggle]);
-  if(a.grade==='pass') r.push('You need a pass, so triage cuts the topics least likely to come up.');
-  if(a.grade==='top') r.push('You’re aiming high, so the plan ends with a full mock exam.');
+  const R0 = L().reasons, r = [R0.type[a.type], R0.covered[a.covered], R0.struggle[a.struggle]];
+  if(a.grade==='pass') r.push(R0.pass);
+  if(a.grade==='top') r.push(R0.top);
   return r;
 }
 
 const dayDate = off => { const d = S.start ? new Date(S.start) : new Date(); d.setDate(d.getDate()+off); return d; };
-const fmtDate = off => dayDate(off).toLocaleDateString('en-IE',{weekday:'short',day:'numeric',month:'short'});
+const fmtDate = off => dayDate(off).toLocaleDateString(L().locale,{weekday:'short',day:'numeric',month:'short'});
 const dkey = d => d.toISOString().slice(0,10);
 const mins = list => list.reduce((s,b)=>s+b.min,0);
 const hm = m => m>=60 ? `${Math.floor(m/60)}h${m%60?` ${m%60}m`:''}` : `${m} min`;
@@ -378,7 +534,7 @@ function applyResult(tid, res){
     R.changes.push({name:t.name, from, to:t.status});
     if(up){ addXP(t.status==='lime' ? 60 : 25); if(t.status==='lime') R.mastered.push(t.name); }
   } else if(res==='good' && from==='orange'){
-    R.changes.push({name:t.name, from, to:from, note:'Get it right again on another day to master it'});
+    R.changes.push({name:t.name, from, to:from, note:tr('againNote')});
   }
   if(res!=='good' && t.status!=='lime') R.gap = tid;
 }
@@ -389,7 +545,7 @@ function addXP(n){
   S.xp += n; if(R) R.xp += n;
   const f = document.createElement('div'); f.className='xpf'; f.textContent = `+${n} XP`;
   document.body.appendChild(f); setTimeout(()=>f.remove(), 1000);
-  if(level() > before){ setTimeout(()=>toast(`Level up · Level ${level()}`), 400); buzz(40); }
+  if(level() > before){ setTimeout(()=>toast(tr('levelUp',{n:level()})), 400); buzz(40); }
 }
 function markActive(){ S.active[dkey(new Date())] = 1; }
 function streak(){
@@ -415,7 +571,7 @@ function gradeCard(g){
   if(g==='got'){
     c.box = Math.min(4, c.box+1); c.due = Math.min(lastDay(), S.day + INT[c.box]); c.got++; p.s += 1;
     CR.combo++; CR.best = Math.max(CR.best, CR.combo); addXP(10); buzz(8);
-    if(CR.combo % 5 === 0){ addXP(15); toast(`Combo ×${CR.combo}`); buzz(30); }
+    if(CR.combo % 5 === 0){ addXP(15); toast(tr('combo',{n:CR.combo})); buzz(30); }
   } else {
     c.box = 1; c.due = later ? Math.min(lastDay(), S.day+1) : S.day; CR.combo = 0;
     if(g==='uns'){ p.s += .5; addXP(4); } else { c.miss++; addXP(2); }
@@ -440,7 +596,7 @@ const curBlock = () => S.plan[S.day][S.cur];
 const curTopicId = () => S.sessTopic[sKey()];
 function openSession(i){
   S.cur = i; const b = curBlock(), def = B[b.key];
-  R = {xp:0, changes:[], best:0, cards:0, mastered:[], title:b.name, gap:null};
+  R = {xp:0, changes:[], best:0, cards:0, mastered:[], gap:null};
   if(def.topic && !curTopicId()){ const t = pickTopic(def.topic); if(t) S.sessTopic[sKey()] = t; }
   CP = 'make'; CR = null;
   if(def.tool==='review'){ const ids = dueCards(); if(ids.length) startDeck(ids, 'review'); }
@@ -457,7 +613,7 @@ function finishPill(){
   go('reward');
 }
 function startPill(){
-  R = {xp:0, changes:[], best:0, cards:0, mastered:[], title:'Pill done', gap:null, pill:true};
+  R = {xp:0, changes:[], best:0, cards:0, mastered:[], gap:null, pill:true};
   CR = null;
   if(S.cards.length >= 3) startDeck(weakestCards(5), 'pill');
   go('pill');
@@ -467,37 +623,38 @@ function startPill(){
 function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200); }
 function go(screen){ S.screen=screen; render(); window.scrollTo(0,0); }
 const SPARK = '56,0 64,48 112,56 64,64 56,112 48,64 0,56 48,48';
-const brand = `<div class="brand"><svg viewBox="0 0 112 112" aria-hidden="true"><polygon points="${SPARK}"/></svg>Crux <span class="alpha">alpha</span></div>`;
+const brandMark = `<div class="brand"><svg viewBox="0 0 112 112" aria-hidden="true"><polygon points="${SPARK}"/></svg>Crux <span class="alpha">alpha</span></div>`;
+const brand = () => `<div style="display:flex;align-items:center;gap:10px">${brandMark}${langBtn()}</div>`;
 const cta = inner => `<div class="cta-wrap"><div class="cta-inner">${inner}</div></div>`;
 const dot = s => `<i class="tdot s-${s}"></i>`;
 
 function vWelcome(){ return `
   <section class="screen">
-    <div class="bar">${brand}</div>
+    <div class="bar">${brand()}</div>
     <div class="hero-orb" aria-hidden="true"></div>
-    <h1>Exam coming up?<br><span class="ink">Let’s get you ready.</span></h1>
-    <p class="lead">Tell us how much time you have. We’ll build a plan and guide you through every session until exam day.</p>
+    <h1>${tr('heroA')}<br><span class="ink">${tr('heroB')}</span></h1>
+    <p class="lead">${tr('heroLead')}</p>
     <div class="steps-mini">
-      <div><b>60s</b>Seven quick questions</div>
-      <div><b>PLAN</b>A day-by-day plan built for your exam</div>
-      <div><b>GO</b>Guided sessions, flashcards and daily pills</div>
+      <div><b>60s</b>${tr('mini1')}</div>
+      <div><b>PLAN</b>${tr('mini2')}</div>
+      <div><b>GO</b>${tr('mini3')}</div>
     </div>
-  </section>${cta(`<button class="btn btn-primary" data-act="start">Start</button>`)}`; }
+  </section>${cta(`<button class="btn btn-primary" data-act="start">${tr('start')}</button>`)}`; }
 
 function vQuiz(){
-  const q = QUIZ[S.qi], sel = S.a[q.k];
+  const Q = QZ(), q = Q[S.qi], sel = S.a[q.k];
   return `
   <section class="screen">
     <div class="bar">
-      <button class="back" data-act="qback" aria-label="Back">←</button>
-      <div class="progress" aria-hidden="true"><span style="width:${(S.qi+1)/QUIZ.length*100}%"></span></div>
-      <span class="tag">${S.qi+1}/${QUIZ.length}</span>
+      <button class="back" data-act="qback" aria-label="${tr('back')}">←</button>
+      <div class="progress" aria-hidden="true"><span style="width:${(S.qi+1)/Q.length*100}%"></span></div>
+      <span class="tag">${S.qi+1}/${Q.length}</span>
     </div>
     <h2>${q.q}</h2>
     <div class="options">
       ${q.o.map(([v,l,s])=>`<button class="opt" id="opt-${q.k}-${v}" data-act="pick" data-v="${v}" aria-pressed="${sel===v}"><span>${l}${s?`<small>${s}</small>`:''}</span><span class="dot"></span></button>`).join('')}
     </div>
-  </section>${cta(`<button class="btn btn-primary" data-act="qnext" ${sel?'':'disabled'}>${S.qi===QUIZ.length-1?'Build my plan':'Continue'}</button>`)}`;
+  </section>${cta(`<button class="btn btn-primary" data-act="qnext" ${sel?'':'disabled'}>${S.qi===Q.length-1?tr('buildPlan'):tr('cont')}</button>`)}`;
 }
 
 function vBuilding(){ return `
@@ -506,41 +663,41 @@ function vBuilding(){ return `
       <div class="build-orb"></div>
       <svg class="morph" viewBox="0 0 112 112"><polygon id="morph-a" points="56,0 60,52 112,56 60,60 56,112 52,60 0,56 52,52"/><polygon id="morph-b" points="56,0 60,52 112,56 60,60 56,112 52,60 0,56 52,52" style="opacity:0"/></svg>
     </div>
-    <div class="build-line" id="bline">Analysing your answers…</div>
+    <div class="build-line" id="bline">${L().building[0]}</div>
   </div></section>`; }
 
 function vReveal(){
   const p = S.plan, n = examIn();
   return `
   <section class="screen">
-    <div class="bar">${brand}<span class="pill">Your plan</span></div>
-    <div class="count"><span class="big">${n}</span><span>day${n>1?'s':''} to your exam<br><span class="tag">${p.length}-day plan · ${S.a.slot.toLowerCase()} sessions</span></span></div>
+    <div class="bar">${brand()}<span class="pill">${tr('yourPlan')}</span></div>
+    <div class="count"><span class="big">${n}</span><span>${n>1?tr('daysTo'):tr('dayTo')}<br><span class="tag">${tr('planMeta',{n:p.length, slot:L().slot[S.a.slot]})}</span></span></div>
     <div class="why">${reasons(S.a).map(r=>`<div>${r}</div>`).join('')}</div>
     <div class="days">
       ${p.map((list,i)=>`<div class="day">
-        <div class="day-head"><strong>Day ${i+1}${i===p.length-1&&p.length>1?' · lighter':''}</strong><span class="tag">${fmtDate(i)} · ${hm(mins(list))}</span></div>
-        <div class="chips">${list.map(b=>`<span class="chip ${b.key==='review'?'rv':''}">${b.name}</span>`).join('')}</div>
+        <div class="day-head"><strong>${tr('day')} ${i+1}${i===p.length-1&&p.length>1?` · ${tr('lighter')}`:''}</strong><span class="tag">${fmtDate(i)} · ${hm(mins(list))}</span></div>
+        <div class="chips">${list.map(b=>`<span class="chip ${b.key==='review'?'rv':''}">${bname(b.key)}</span>`).join('')}</div>
       </div>`).join('')}
     </div>
-    <p class="note">Plus 3 two-minute pills a day to keep things fresh between sessions.</p>
-  </section>${cta(`<button class="btn btn-primary" data-act="save">Save my plan</button>`)}`;
+    <p class="note">${tr('pillsNote')}</p>
+  </section>${cta(`<button class="btn btn-primary" data-act="save">${tr('savePlan')}</button>`)}`;
 }
 
 function vSave(){ return `
   <section class="screen">
-    <div class="bar"><button class="back" data-act="toReveal" aria-label="Back">←</button></div>
-    <h2>Save your plan</h2>
-    <p class="lead">Create an account so your plan and progress stay with you. We’ll remind you when it’s time for your next session.</p>
-    <p class="note">Alpha build: sign-in is simulated. Your plan and progress are saved on this device only.</p>
+    <div class="bar"><button class="back" data-act="toReveal" aria-label="${tr('back')}">←</button>${langBtn()}</div>
+    <h2>${tr('saveH')}</h2>
+    <p class="lead">${tr('saveLead')}</p>
+    <p class="note">${tr('saveNote')}</p>
   </section>${cta(`
-    <button class="btn btn-primary" data-act="today">Continue with Apple</button>
-    <button class="btn btn-ghost" data-act="today">Continue with Google</button>
-    <button class="btn btn-ghost" data-act="today">Continue with email</button>`)}`; }
+    <button class="btn btn-primary" data-act="today">${tr('apple')}</button>
+    <button class="btn btn-ghost" data-act="today">${tr('google')}</button>
+    <button class="btn btn-ghost" data-act="today">${tr('email')}</button>`)}`; }
 
 function xpHeader(){
   const within = S.xp % 250;
   return `<div style="display:grid;gap:8px">
-    <div class="sec-h"><span class="lvl"><b>Lv ${level()}</b>${S.xp} XP</span><span class="tag">${250-within} XP to level ${level()+1}</span></div>
+    <div class="sec-h"><span class="lvl"><b>Lv ${level()}</b>${S.xp} XP</span><span class="tag">${tr('xpTo',{n:250-within, l:level()+1})}</span></div>
     <div class="xpbar"><span style="width:${within/250*100}%"></span></div>
   </div>`;
 }
@@ -549,10 +706,10 @@ function topicRow(t, editable){
   const n = S.cards.filter(c=>c.tid===t.id).length;
   return `<div class="topic">
     ${editable ? '' : dot(t.status)}
-    <div class="nm">${esc(t.name)}<small>${COLOR_NAME[t.status]}${t.star?' · comes up a lot':''}${n?` · ${n} card${n>1?'s':''}`:''}</small></div>
-    ${editable ? `<div class="cset" role="group" aria-label="Rate ${esc(t.name)}">${['red','orange','lime'].map(s=>`<button data-act="tset" data-id="${t.id}" data-v="${s}" aria-pressed="${t.status===s}" aria-label="${COLOR_NAME[s]}"><i class="s-${s}"></i></button>`).join('')}</div>
-    <button class="star" data-act="tstar" data-id="${t.id}" aria-pressed="${!!t.star}" aria-label="Comes up in past papers">★</button>
-    <button class="x" data-act="tdel" data-id="${t.id}" aria-label="Remove ${esc(t.name)}">×</button>` : ''}
+    <div class="nm">${esc(t.name)}<small>${COLOR_NAME[t.status]}${t.star?` · ${tr('comesUp')}`:''}${n?` · ${n} ${n>1?tr('cards'):tr('card')}`:''}</small></div>
+    ${editable ? `<div class="cset" role="group" aria-label="${tr('rate',{t:esc(t.name)})}">${['red','orange','lime'].map(s=>`<button data-act="tset" data-id="${t.id}" data-v="${s}" aria-pressed="${t.status===s}" aria-label="${COLOR_NAME[s]}"><i class="s-${s}"></i></button>`).join('')}</div>
+    <button class="star" data-act="tstar" data-id="${t.id}" aria-pressed="${!!t.star}" aria-label="${tr('starLabel')}">★</button>
+    <button class="x" data-act="tdel" data-id="${t.id}" aria-label="${tr('remove',{t:esc(t.name)})}">×</button>` : ''}
   </div>`;
 }
 
@@ -563,49 +720,49 @@ function vToday(){
   const left = examIn() - S.day;
   const pillsDone = S.pills[S.day] || 0;
   const head = `
-    <div class="bar">${brand}<button class="link" data-act="restart">Retake quiz</button></div>
-    <div class="count"><span class="big">${left}</span><span>day${left>1?'s':''} to your exam<br><span class="tag">${fmtDate(S.day)}</span></span></div>
+    <div class="bar">${brand()}<button class="link" data-act="restart">${tr('retake')}</button></div>
+    <div class="count"><span class="big">${left}</span><span>${left>1?tr('daysTo'):tr('dayTo')}<br><span class="tag">${fmtDate(S.day)}</span></span></div>
     ${xpHeader()}
     <div class="stats3">
-      <div class="stat"><b>${doneN}/${list.length}</b><span>sessions</span></div>
-      <div class="stat hot"><b>${streak()}</b><span>day streak</span></div>
-      <div class="stat"><b>${readiness()}%</b><span>exam ready</span></div>
+      <div class="stat"><b>${doneN}/${list.length}</b><span>${tr('sessions')}</span></div>
+      <div class="stat hot"><b>${streak()}</b><span>${tr('streak')}</span></div>
+      <div class="stat"><b>${readiness()}%</b><span>${tr('ready')}</span></div>
     </div>
     <div class="seg" role="tablist">
-      <button role="tab" data-act="view" data-v="plan" aria-selected="${S.view==='plan'}">Plan</button>
-      <button role="tab" data-act="view" data-v="topics" aria-selected="${S.view==='topics'}">Topics · ${S.topics.length}</button>
+      <button role="tab" data-act="view" data-v="plan" aria-selected="${S.view==='plan'}">${tr('plan')}</button>
+      <button role="tab" data-act="view" data-v="topics" aria-selected="${S.view==='topics'}">${tr('topics')} · ${S.topics.length}</button>
     </div>`;
 
   if(S.view==='topics'){
     const c = s => S.topics.filter(t=>t.status===s).length, tot = S.topics.length || 1;
     return `<section class="screen">${head}
-      <div class="ready"><span class="big">${readiness()}%</span><span class="tag">exam ready</span></div>
+      <div class="ready"><span class="big">${readiness()}%</span><span class="tag">${tr('ready')}</span></div>
       <div class="stack">${['lime','orange','red'].map(s=>`<i class="s-${s}" style="width:${c(s)/tot*100}%"></i>`).join('')}</div>
       <div class="legend">${['lime','orange','red'].map(s=>`<span>${dot(s)}${COLOR_NAME[s]} · ${c(s)}</span>`).join('')}</div>
       ${S.topics.length ? `<div class="list">${byPriority(S.topics).map(t=>topicRow(t,true)).join('')}</div>`
-        : `<p class="note">No topics yet. They get added in your Triage session, or you can add them here.</p>`}
-      <div class="addrow"><input class="field" id="tp-in" placeholder="Add a topic, e.g. Market structures" autocomplete="off"><button class="btn-sm" data-act="tadd">Add</button></div>
+        : `<p class="note">${tr('noTopics')}</p>`}
+      <div class="addrow"><input class="field" id="tp-in" placeholder="${tr('addTopicPh')}" autocomplete="off"><button class="btn-sm" data-act="tadd">${tr('add')}</button></div>
     </section>`;
   }
 
   return `<section class="screen">${head}
-    <div class="daytabs" role="tablist">${p.map((_,i)=>`<button role="tab" id="tab-${i}" data-act="day" data-v="${i}" aria-selected="${i===S.day}">Day ${i+1}</button>`).join('')}</div>
-    <div class="sec-h"><h3>Pills</h3><span class="tag">${pillsDone}/3 · 2 min each</span></div>
-    <div class="pills">${['Morning','Midday','Evening'].map((l,k)=>`<button class="pillcard ${k<pillsDone?'done':''}" data-act="pill" ${k!==pillsDone?'disabled':''}>
-      <span class="ic">${k<pillsDone?'✓':k+1}</span><strong>${l}</strong><span>${k<pillsDone?'+20 XP':k===pillsDone?'Ready':'Later'}</span></button>`).join('')}</div>
-    <div class="sec-h"><h3>Sessions</h3><span class="tag">${hm(mins(list))}</span></div>
+    <div class="daytabs" role="tablist">${p.map((_,i)=>`<button role="tab" id="tab-${i}" data-act="day" data-v="${i}" aria-selected="${i===S.day}">${tr('day')} ${i+1}</button>`).join('')}</div>
+    <div class="sec-h"><h3>${tr('pillsH')}</h3><span class="tag">${tr('pillsMeta',{n:pillsDone})}</span></div>
+    <div class="pills">${L().pills.map((l,k)=>`<button class="pillcard ${k<pillsDone?'done':''}" data-act="pill" ${k!==pillsDone?'disabled':''}>
+      <span class="ic">${k<pillsDone?'✓':k+1}</span><strong>${l}</strong><span>${k<pillsDone?'+20 XP':k===pillsDone?tr('pillReady'):tr('pillLater')}</span></button>`).join('')}</div>
+    <div class="sec-h"><h3>${tr('sessionsH')}</h3><span class="tag">${hm(mins(list))}</span></div>
     <div class="list">
       ${list.map((b,i)=>{ const k=`${S.day}-${i}`, done=S.done[k], t=topic(S.sessTopic[k]);
-        const sub = b.key==='review' ? `${dueCards().length} cards due` : t ? esc(t.name) : B[b.key].topic ? 'Picks your next priority topic' : '';
+        const sub = b.key==='review' ? tr('cardsDue',{n:dueCards().length}) : t ? esc(t.name) : B[b.key].topic ? tr('picksTopic') : '';
         return `<button class="row ${done?'done':''} ${i===next?'next':''}" data-act="open" data-v="${i}">
           <span class="n">${done?'✓':i+1}</span>
-          <span class="t"><strong>${b.name}</strong><span>${b.min} min${sub?` · ${sub}`:''}</span></span>
-          <span class="go">${done?'Redo':i===next?'Start':''}</span>
+          <span class="t"><strong>${bname(b.key)}</strong><span>${b.min} min${sub?` · ${sub}`:''}</span></span>
+          <span class="go">${done?tr('redo'):i===next?tr('start'):''}</span>
         </button>`; }).join('')}
     </div>
-    ${next===-1?'<p class="note">Day done. Rest now. Sleep is when today’s work sticks.</p>':''}
+    ${next===-1?`<p class="note">${tr('dayDone')}</p>`:''}
   </section>
-  ${next>-1?cta(`<button class="btn btn-primary" data-act="open" data-v="${next}">Start next session · ${list[next].min} min</button>`):''}`;
+  ${next>-1?cta(`<button class="btn btn-primary" data-act="open" data-v="${next}">${tr('startNext',{m:list[next].min})}</button>`):''}`;
 }
 
 /* ---------- Session screen ---------- */
@@ -615,44 +772,44 @@ const pauseIco = '<svg viewBox="0 0 24 24"><path d="M6 4h4.5v16H6zM13.5 4H18v16h
 const clock = s => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
 
 function topicPicker(){
-  if(!S.topics.length) return `<p class="note">Add your topics first in the Topics tab, so each session targets one.</p>`;
+  if(!S.topics.length) return `<p class="note">${tr('addTopicsFirst')}</p>`;
   const cur = curTopicId();
   return `<label class="target" for="sel-topic">${dot(topic(cur)?.status||'red')}
     <select id="sel-topic">${byPriority(S.topics).map(t=>`<option value="${t.id}" ${t.id===cur?'selected':''}>${esc(t.name)}</option>`).join('')}</select>
-    <span class="tag">change</span></label>`;
+    <span class="tag">${tr('change')}</span></label>`;
 }
 
 function vTriage(){
   return `
-    <p class="lead">List every topic from your module outline or lecture slides, then rate each one honestly. Star the ones that keep coming up in past papers.</p>
-    <div class="legend">${['red','orange','lime'].map(s=>`<span>${dot(s)}${COLOR_NAME[s]}</span>`).join('')}<span>★ Comes up a lot</span></div>
-    <div class="addrow"><input class="field" id="tp-in" placeholder="e.g. Market structures" autocomplete="off"><button class="btn-sm" data-act="tadd">Add</button></div>
+    <p class="lead">${tr('triageLead')}</p>
+    <div class="legend">${['red','orange','lime'].map(s=>`<span>${dot(s)}${COLOR_NAME[s]}</span>`).join('')}<span>★ ${tr('starLabel')}</span></div>
+    <div class="addrow"><input class="field" id="tp-in" placeholder="${tr('triagePh')}" autocomplete="off"><button class="btn-sm" data-act="tadd">${tr('add')}</button></div>
     <div class="list">${S.topics.map(t=>topicRow(t,true)).join('')}</div>`;
 }
 
 function vDeck(){
   const c = S.cards.find(x=>x.id===CR.ids[CR.i]); const t = topic(c?.tid);
   return `
-    <div class="deck-top"><span class="tag">Card ${CR.i+1}/${CR.ids.length}</span><span class="combo ${CR.combo>=3?'on':''}">Combo ×${CR.combo}</span></div>
+    <div class="deck-top"><span class="tag">${tr('cardN',{i:CR.i+1,n:CR.ids.length})}</span><span class="combo ${CR.combo>=3?'on':''}">${tr('combo',{n:CR.combo})}</span></div>
     <div class="fcard" id="fcard">
       <span class="tag">${esc(t?.name||'')}</span>
       <div class="q">${esc(c?.q)}</div>
       ${CR.flip?`<div class="ans" id="ans">${esc(c?.a)}</div>`:''}
     </div>
-    <p class="tag" style="text-align:center">${CR.flip?'Be honest. Only “Got it” if you said it before flipping.':'Say the answer out loud before you flip.'}</p>`;
+    <p class="tag" style="text-align:center">${CR.flip?tr('honest'):tr('sayFirst')}</p>`;
 }
 const deckCta = () => CR.flip
-  ? `<div class="grade"><button class="g-miss" data-act="grade" data-v="miss">Missed</button><button class="g-uns" data-act="grade" data-v="uns">Not sure</button><button class="g-got" data-act="grade" data-v="got">Got it</button></div>`
-  : `<button class="btn btn-primary" data-act="flip">Show answer</button>`;
+  ? `<div class="grade"><button class="g-miss" data-act="grade" data-v="miss">${tr('missed')}</button><button class="g-uns" data-act="grade" data-v="uns">${tr('notSure')}</button><button class="g-got" data-act="grade" data-v="got">${tr('gotIt')}</button></div>`
+  : `<button class="btn btn-primary" data-act="flip">${tr('showAns')}</button>`;
 
 function vMakerBody(tid){
   const mine = S.cards.filter(c=>c.tid===tid);
   return `
-    <p class="note">One idea per card. Write the question in your own words, keep the answer short.</p>
-    <input class="field" id="cq" placeholder="Front: question" autocomplete="off">
-    <input class="field" id="ca" placeholder="Back: answer" autocomplete="off">
-    <button class="btn btn-ghost" data-act="addcard">Add card</button>
-    ${mine.length?`<div class="sec-h"><h3>${mine.length} card${mine.length>1?'s':''} on this topic</h3></div>
+    <p class="note">${tr('cardTip')}</p>
+    <input class="field" id="cq" placeholder="${tr('frontPh')}" autocomplete="off">
+    <input class="field" id="ca" placeholder="${tr('backPh')}" autocomplete="off">
+    <button class="btn btn-ghost" data-act="addcard">${tr('addCard')}</button>
+    ${mine.length?`<div class="sec-h"><h3>${tr('onTopic',{n:mine.length, c:mine.length>1?tr('cards'):tr('card')})}</h3></div>
     <div class="mini-list">${mine.slice(-4).reverse().map(c=>`<div>${esc(c.q)}</div>`).join('')}</div>`:''}`;
 }
 
@@ -660,80 +817,73 @@ function vSession(){
   const b = curBlock(), def = B[b.key];
   const t = topic(curTopicId());
   const head = `<div class="bar">
-      <button class="back" data-act="exit" aria-label="Leave session">←</button>
-      <span class="tag">Day ${S.day+1} · ${b.name}</span>
-      <label class="toggle"><input type="checkbox" id="fast" ${T.fast?'checked':''}> fast demo</label>
+      <button class="back" data-act="exit" aria-label="${tr('leave')}">←</button>
+      <span class="tag">${tr('day')} ${S.day+1} · ${bname(b.key)}</span>
+      <label class="toggle"><input type="checkbox" id="fast" ${T.fast?'checked':''}> ${tr('fast')}</label>
     </div>`;
 
   if(def.mode==='focus'){
-    const steps = def.steps.map(s=>s.replace('{t}', t ? `<b>${esc(t.name)}</b>` : 'your weakest topic'));
+    const steps = bsteps(b.key).map(s=>s.replace('{t}', t ? `<b>${esc(t.name)}</b>` : tr('weakestTopic')));
     return `<section class="screen">${head}
       <div class="timer-zone">
         <div class="s-orb ${T.run?'running':'paused'}" id="orb" aria-hidden="true"></div>
         <div class="time" id="time">${clock(T.left)}</div>
       </div>
-      <h2 style="text-align:center">${b.name}</h2>
+      <h2 style="text-align:center">${bname(b.key)}</h2>
       ${def.topic ? topicPicker() : ''}
       <div class="tbar"><span id="tbar"></span></div>
       <div class="tmeta"><span id="elapsed">${clock(T.total-T.left)}</span><span>${clock(T.total)}</span></div>
       <div class="controls">
-        <button class="round" data-act="reset" aria-label="Restart timer">↺</button>
-        <button class="play" data-act="toggle" aria-label="${T.run?'Pause':'Play'}" id="playbtn">${T.run?pauseIco:playIco}</button>
-        <button class="round" data-act="finish" aria-label="Finish session">Done</button>
+        <button class="round" data-act="reset" aria-label="${tr('restart')}">↺</button>
+        <button class="play" data-act="toggle" aria-label="${T.run?tr('pause'):tr('play')}" id="playbtn">${T.run?pauseIco:playIco}</button>
+        <button class="round" data-act="finish" aria-label="${tr('finishLabel')}">${tr('done')}</button>
       </div>
       <ol class="howto">${steps.map(s=>`<li><span>${s}</span></li>`).join('')}</ol>
-    </section>${cta(`<button class="btn btn-primary" data-act="finish">Finish and rate it</button>`)}`;
+    </section>${cta(`<button class="btn btn-primary" data-act="finish">${tr('finishRate')}</button>`)}`;
   }
 
   const ctimer = `<div class="ctimer">
-      <button class="mini-play" data-act="toggle" aria-label="${T.run?'Pause':'Play'}" id="playbtn">${T.run?pauseIco:playIco}</button>
+      <button class="mini-play" data-act="toggle" aria-label="${T.run?tr('pause'):tr('play')}" id="playbtn">${T.run?pauseIco:playIco}</button>
       <span class="ct" id="time">${clock(T.left)}</span>
       <div class="tbar"><span id="tbar"></span></div>
     </div>`;
 
   if(def.tool==='triage'){
-    return `<section class="screen">${head}${ctimer}<h2>Map your topics</h2>${vTriage()}</section>
-      ${cta(`<button class="btn btn-primary" data-act="triagedone" ${S.topics.length?'':'disabled'}>Done · ${S.topics.length} topic${S.topics.length===1?'':'s'}</button>`)}`;
+    return `<section class="screen">${head}${ctimer}<h2>${tr('mapH')}</h2>${vTriage()}</section>
+      ${cta(`<button class="btn btn-primary" data-act="triagedone" ${S.topics.length?'':'disabled'}>${S.topics.length===1?tr('triageDone1'):tr('triageDone',{n:S.topics.length})}</button>`)}`;
   }
 
   if(def.tool==='cards'){
     if(CP==='test' && CR) return `<section class="screen">${head}${vDeck()}</section>${cta(deckCta())}`;
     const n = S.cards.filter(c=>c.tid===curTopicId()).length;
-    return `<section class="screen">${head}${ctimer}<h2>Make your cards</h2>${topicPicker()}${t?vMakerBody(t.id):''}</section>
-      ${cta(`<button class="btn btn-primary" data-act="testcards" ${n?'':'disabled'}>Test yourself · ${n} card${n===1?'':'s'}</button>`)}`;
+    return `<section class="screen">${head}${ctimer}<h2>${tr('makeCards')}</h2>${topicPicker()}${t?vMakerBody(t.id):''}</section>
+      ${cta(`<button class="btn btn-primary" data-act="testcards" ${n?'':'disabled'}>${tr('testYourself',{n, c:n===1?tr('card'):tr('cards')})}</button>`)}`;
   }
 
   if(def.tool==='review'){
-    if(CR) return `<section class="screen">${head}<h2>Quick review</h2>${vDeck()}</section>${cta(deckCta())}`;
+    if(CR) return `<section class="screen">${head}<h2>${tr('reviewH')}</h2>${vDeck()}</section>${cta(deckCta())}`;
     const weak = byPriority(S.topics.filter(t=>t.status!=='lime')).slice(0,3);
-    return `<section class="screen">${head}${ctimer}<h2>Quick review</h2>
-      <p class="lead">No cards due right now. Do a 60-second blurt on each of these: write everything you remember, then check your notes.</p>
-      <div class="list">${weak.map(t=>topicRow(t,false)).join('') || '<p class="note">Add topics and cards so reviews have something to work with.</p>'}</div>
-    </section>${cta(`<button class="btn btn-primary" data-act="reviewdone">Done</button>`)}`;
+    return `<section class="screen">${head}${ctimer}<h2>${tr('reviewH')}</h2>
+      <p class="lead">${tr('noDue')}</p>
+      <div class="list">${weak.map(t=>topicRow(t,false)).join('') || `<p class="note">${tr('noReview')}</p>`}</div>
+    </section>${cta(`<button class="btn btn-primary" data-act="reviewdone">${tr('done')}</button>`)}`;
   }
 }
 
 /* ---------- Self-rating ---------- */
-const ASSESS = {
-  explain:{q:'Could you explain {t} without your notes?', o:[['good','Yes','Clear and complete'],['partial','Partly','Got stuck once or twice'],['bad','No','Still lost']]},
-  blurt:{q:'How many key points about {t} did you miss?', o:[['good','None','I remembered it all'],['partial','1 or 2','Small gaps'],['bad','3 or more','Big gaps']]},
-  score:{q:'How many did you get right?', o:[['good','Most','80% or more'],['partial','About half',''],['bad','Few','Less than half']]}
-};
-const CHECK = ['I answered exactly what the question asked','My main point is clear at the start','Every argument has an example or evidence','I used the module’s concepts and authors','There’s a conclusion that closes the answer'];
-
 function vAssess(){
   const b = curBlock(), def = B[b.key], t = topic(curTopicId());
-  const tn = t ? esc(t.name) : 'it';
+  const tn = t ? esc(t.name) : tr('it');
   if(def.assess==='check') return `
     <section class="screen">
-      <div class="bar"><span class="tag">Self-check · ${b.name}</span></div>
-      <h2>Mark what your answer did</h2>
-      <div class="checklist">${CHECK.map((c,i)=>`<label for="sc-${i}"><input type="checkbox" id="sc-${i}" class="sc"> ${c}</label>`).join('')}</div>
-    </section>${cta(`<button class="btn btn-primary" data-act="checkdone">Save</button>`)}`;
-  const A = ASSESS[def.assess];
+      <div class="bar"><span class="tag">${tr('selfCheck')} · ${bname(b.key)}</span></div>
+      <h2>${tr('markWhat')}</h2>
+      <div class="checklist">${L().check.map((c,i)=>`<label for="sc-${i}"><input type="checkbox" id="sc-${i}" class="sc"> ${c}</label>`).join('')}</div>
+    </section>${cta(`<button class="btn btn-primary" data-act="checkdone">${tr('save')}</button>`)}`;
+  const A = L().assess[def.assess];
   return `
     <section class="screen">
-      <div class="bar"><span class="tag">Rate it · ${b.name}</span></div>
+      <div class="bar"><span class="tag">${tr('rateIt')} · ${bname(b.key)}</span></div>
       <h2>${A.q.replace('{t}', tn)}</h2>
       <div class="choices">${A.o.map(([v,l,s])=>`<button data-act="rate" data-v="${v}">${dot(v==='good'?'lime':v==='partial'?'orange':'red')}<span style="display:grid;color:var(--fg)">${l}<span>${s}</span></span></button>`).join('')}</div>
     </section>`;
@@ -743,41 +893,41 @@ function vAssess(){
 function vReward(){
   return `
   <section class="screen">
-    <div class="bar"><span class="tag">${R.pill?'Pill complete':'Session complete'}</span><span class="lvl"><b>Lv ${level()}</b></span></div>
+    <div class="bar"><span class="tag">${R.pill?tr('pillDone'):tr('sessDone')}</span><span class="lvl"><b>Lv ${level()}</b></span></div>
     <svg class="done-mark" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28"/><path d="M20 33 l8 8 l16 -18"/></svg>
-    <div><div class="xp-big" id="xpbig">${R.xp}</div><span class="tag">XP earned · ${S.xp} total</span></div>
-    ${R.mastered.map(n=>`<div class="mastered"><svg viewBox="0 0 112 112"><polygon points="${SPARK}"/></svg><span class="tag">Topic mastered</span><h2>${esc(n)}</h2></div>`).join('')}
+    <div><div class="xp-big" id="xpbig">${R.xp}</div><span class="tag">${tr('xpEarned',{n:S.xp})}</span></div>
+    ${R.mastered.map(n=>`<div class="mastered"><svg viewBox="0 0 112 112"><polygon points="${SPARK}"/></svg><span class="tag">${tr('mastered')}</span><h2>${esc(n)}</h2></div>`).join('')}
     ${R.changes.length?`<div class="changes">${R.changes.map(c=>`<div class="change"><span class="nm">${esc(c.name)}${c.note?`<br><span class="tag">${c.note}</span>`:''}</span><span class="arr">${dot(c.from)}${c.from!==c.to?`→ ${dot(c.to)}`:''}</span></div>`).join('')}</div>`:''}
     <div class="stats3">
-      <div class="stat"><b>${R.cards}</b><span>cards</span></div>
-      <div class="stat"><b>×${R.best}</b><span>best combo</span></div>
-      <div class="stat hot"><b>${streak()}</b><span>day streak</span></div>
+      <div class="stat"><b>${R.cards}</b><span>${tr('cards')}</span></div>
+      <div class="stat"><b>×${R.best}</b><span>${tr('bestCombo')}</span></div>
+      <div class="stat hot"><b>${streak()}</b><span>${tr('streak')}</span></div>
     </div>
     ${xpHeader()}
-  </section>${cta(`<button class="btn btn-primary" data-act="today">Continue</button>${R.gap&&topic(R.gap)?`<button class="btn btn-ghost" data-act="maker">Turn the gaps into flashcards</button>`:''}`)}`;
+  </section>${cta(`<button class="btn btn-primary" data-act="today">${tr('cont')}</button>${R.gap&&topic(R.gap)?`<button class="btn btn-ghost" data-act="maker">${tr('gaps')}</button>`:''}`)}`;
 }
 
 function vMaker(){
   const t = topic(R.gap);
   return `<section class="screen">
-    <div class="bar"><button class="back" data-act="today" aria-label="Back">←</button><span class="tag">Fix the gaps</span></div>
+    <div class="bar"><button class="back" data-act="today" aria-label="${tr('back')}">←</button><span class="tag">${tr('fixGaps')}</span></div>
     <h2>${esc(t?.name)}</h2>${t?vMakerBody(t.id):''}
-  </section>${cta(`<button class="btn btn-primary" data-act="today">Save and continue</button>`)}`;
+  </section>${cta(`<button class="btn btn-primary" data-act="today">${tr('saveCont')}</button>`)}`;
 }
 
 function vPill(){
-  const head = `<div class="bar"><button class="back" data-act="today" aria-label="Back">←</button><span class="tag">Pill · 2 min</span></div>`;
-  if(CR) return `<section class="screen">${head}<h2>Quick hit</h2>${vDeck()}</section>${cta(deckCta())}`;
+  const head = `<div class="bar"><button class="back" data-act="today" aria-label="${tr('back')}">←</button><span class="tag">${tr('pillTag')}</span></div>`;
+  if(CR) return `<section class="screen">${head}<h2>${tr('quickHit')}</h2>${vDeck()}</section>${cta(deckCta())}`;
   const w = byPriority(S.topics)[0];
-  if(!w) return `<section class="screen">${head}<h2>Add your topics first</h2><p class="lead">Pills pull from your topics and flashcards. Map your topics in the Topics tab.</p></section>
-    ${cta(`<button class="btn btn-primary" data-act="gotopics">Go to topics</button>`)}`;
+  if(!w) return `<section class="screen">${head}<h2>${tr('addFirstH')}</h2><p class="lead">${tr('addFirstP')}</p></section>
+    ${cta(`<button class="btn btn-primary" data-act="gotopics">${tr('goTopics')}</button>`)}`;
   return `<section class="screen">${head}
-    <h2>Without looking, write down 3 key facts about ${esc(w.name)}.</h2>
-    <p class="lead">Use your phone’s notes or a scrap of paper. Then check them against your notes.</p>
+    <h2>${tr('threeFacts',{t:esc(w.name)})}</h2>
+    <p class="lead">${tr('threeLead')}</p>
     <div class="choices">
-      <button data-act="pillrate" data-id="${w.id}" data-v="good">${dot('lime')}<span style="display:grid">Got all 3</span></button>
-      <button data-act="pillrate" data-id="${w.id}" data-v="partial">${dot('orange')}<span style="display:grid">Got 1 or 2</span></button>
-      <button data-act="pillrate" data-id="${w.id}" data-v="bad">${dot('red')}<span style="display:grid">Got none</span></button>
+      <button data-act="pillrate" data-id="${w.id}" data-v="good">${dot('lime')}<span style="display:grid">${tr('got3')}</span></button>
+      <button data-act="pillrate" data-id="${w.id}" data-v="partial">${dot('orange')}<span style="display:grid">${tr('got12')}</span></button>
+      <button data-act="pillrate" data-id="${w.id}" data-v="bad">${dot('red')}<span style="display:grid">${tr('got0')}</span></button>
     </div>
   </section>`;
 }
@@ -788,13 +938,13 @@ function tick(){
   const t=document.getElementById('time'); if(t) t.textContent = clock(T.left);
   const e=document.getElementById('elapsed'); if(e) e.textContent = clock(T.total-T.left);
   const bar=document.getElementById('tbar'); if(bar) bar.style.width = ((T.total-T.left)/T.total*100)+'%';
-  if(T.left===0){ stopT(); toast('Time’s up. Nice work.'); buzz(60); if(B[curBlock().key].mode==='focus') toAssess(); }
+  if(T.left===0){ stopT(); toast(tr('timeUp')); buzz(60); if(B[curBlock().key].mode==='focus') toAssess(); }
 }
 function startT(){ if(T.run) return; T.run=true; T.h=setInterval(tick,1000); syncT(); }
 function stopT(){ T.run=false; clearInterval(T.h); syncT(); }
 function syncT(){
   const o=document.getElementById('orb'); if(o) o.className='s-orb '+(T.run?'running':'paused');
-  const p=document.getElementById('playbtn'); if(p){ p.innerHTML=T.run?pauseIco:playIco; p.setAttribute('aria-label',T.run?'Pause':'Play'); }
+  const p=document.getElementById('playbtn'); if(p){ p.innerHTML=T.run?pauseIco:playIco; p.setAttribute('aria-label',T.run?tr('pause'):tr('play')); }
 }
 function toAssess(){
   stopT();
@@ -923,7 +1073,7 @@ function addTopic(){
 }
 function addCard(tid){
   const q = document.getElementById('cq'), a = document.getElementById('ca');
-  if(!q || !a || !q.value.trim() || !a.value.trim()){ toast('Fill in both sides of the card'); return; }
+  if(!q || !a || !q.value.trim() || !a.value.trim()){ toast(tr('fillBoth')); return; }
   S.cards.push({id:uid(), tid, q:q.value.trim(), a:a.value.trim(), box:1, due:S.day, got:0, miss:0});
   addXP(5); buzz(6); render(); const n = document.getElementById('cq'); if(n) n.focus();
 }
@@ -940,20 +1090,20 @@ document.addEventListener('click', e=>{
   const act = el.dataset.act, v = el.dataset.v, id = el.dataset.id;
   if(act==='start'){ S.qi=0; go('quiz'); }
   else if(act==='pick'){
-    S.a[QUIZ[S.qi].k]=v; persist();
+    S.a[QZ()[S.qi].k]=v; persist();
     document.querySelectorAll('.opt').forEach(o=>o.setAttribute('aria-pressed', o.dataset.v===v));
     const nb=document.querySelector('[data-act="qnext"]'); if(nb) nb.disabled=false;
     if(FX()) anime.animate(el.querySelector('.dot'),{scale:[0.4,1.25,1],duration:420,ease:'out(3)'});
   }
   else if(act==='qback'){ quizOut(()=>{ if(S.qi===0) go('welcome'); else { S.qi--; render(); } }, -1); }
   else if(act==='qnext'){
-    if(S.qi<QUIZ.length-1){ quizOut(()=>{ S.qi++; render(); }, 1); }
+    if(S.qi<QZ().length-1){ quizOut(()=>{ S.qi++; render(); }, 1); }
     else {
-      const keep = {topics:S.topics, cards:S.cards, xp:S.xp, active:S.active};
+      const keep = {topics:S.topics, cards:S.cards, xp:S.xp, active:S.active, lang:S.lang};
       S = Object.assign(fresh(), {a:S.a}, keep);
       S.plan = buildPlan(S.a); S.start = new Date().toISOString();
       go('building');
-      const lines=['Analysing your answers…','Picking the right techniques…','Spreading sessions across your days…','Your plan is ready.'];
+      const lines=L().building;
       lines.forEach((l,i)=>setTimeout(()=>{ const b=document.getElementById('bline'); if(!b) return; b.textContent=l; if(FX()) riseChars(b, 0, 10); if(i===lines.length-1) morphSettle(); },i*900));
       setTimeout(()=>{ morphing=false; go('reveal'); }, lines.length*900 + 300);
     }
@@ -961,7 +1111,8 @@ document.addEventListener('click', e=>{
   else if(act==='save') go('save');
   else if(act==='toReveal') go('reveal');
   else if(act==='today'){ stopT(); go('today'); }
-  else if(act==='restart'){ try{localStorage.removeItem(KEY)}catch(err){} S=fresh(); lastScene=''; render(); }
+  else if(act==='restart'){ try{localStorage.removeItem(KEY)}catch(err){} const lg=S.lang; S=fresh(); S.lang=lg; lastScene=''; render(); }
+  else if(act==='lang'){ S.lang = S.lang==='pt' ? 'en' : 'pt'; document.documentElement.lang = S.lang; lastScene=''; render(); }
   else if(act==='day'){ S.day=+v; render(); }
   else if(act==='view'){ S.view=v; render(); }
   else if(act==='gotopics'){ S.view='topics'; go('today'); }
@@ -992,6 +1143,7 @@ document.addEventListener('click', e=>{
 });
 
 restore();
+document.documentElement.lang = S.lang;
 render();
 </script>
 
