@@ -162,6 +162,9 @@ p{margin:0}
 
 .opt .dot{transition:transform .2s}
 .split-wrap{display:inline-block}
+textarea.field{resize:vertical;min-height:52px;line-height:1.4}
+.wchip{font:inherit;font-size:16px;padding:8px 12px;border-radius:12px;background:var(--surface);border:1px solid var(--line);color:var(--fg)}
+.wchip:active,.wchip:hover{border-color:var(--accent-ink);color:var(--accent-ink)}
 .langbtn{font-family:var(--mono);font-size:11px;letter-spacing:.08em;padding:5px 9px;border-radius:8px;border:1px solid var(--line);color:var(--muted)}
 
 /* XP, levels, streak */
@@ -281,14 +284,14 @@ en: {
     outline:{name:'Answer outlines',steps:['Take 3 past-paper questions on {t}.','10 minutes each: thesis, three arguments with one example each, conclusion.','Structure only. Then run the self-check.']},
     practice:{name:'Practice problems',steps:['Take past-paper problems on {t}.','Time yourself. No notes on the first attempt.','Check the solutions and count how many you got right.']},
     mcq:{name:'Practice questions',steps:['Do a set of multiple-choice questions on {t}.','For every wrong answer, write one line on why the right one is right.']},
-    mock:{name:'Mock exam',steps:['Pick a past paper and set the real exam time.','Phone in another room. No notes.','When time is up, mark it and count how much you got right.']},
+    mock:{name:'Mock exam',steps:['Pick a past paper and set the real exam time.','Do Not Disturb on, keep Crux open with the timer. No notes.','When time is up, mark it and count how much you got right.']},
     essaymock:{name:'Full answer',steps:['Pick one past-paper essay question.','Write the full answer by hand, in exam time.','When time is up, run the self-check.']},
     review:{name:'Quick review'}
   },
   reasons:{
     type:{mcq:'Multiple choice rewards fast recall, so most sessions are flashcards and practice questions.',essay:'Essays reward structure, so you’ll explain topics out loud and outline answers against the clock.',problem:'Calculations reward reps, so most sessions are timed past-paper problems.',mix:'Your exam mixes formats, so sessions rotate between recall, outlines and problems.'},
     covered:{none:'You’re starting from scratch, so the first days focus on understanding your red topics.',half:'You’ve covered half, so day one fills the gaps before drilling starts.',most:'You’ve seen most of it, so you skip straight to testing yourself.'},
-    struggle:{start:'You struggle to start, so each plan opens with a 10-minute warm-up.',focus:'Focus is the hard part, so every session is a fixed timer with your phone away.',prioritise:'Prioritising is the hard part, so triage gets 40 minutes on day one.',forget:'You forget fast, so we added extra quick reviews mid-day.'},
+    struggle:{start:'You struggle to start, so each plan opens with a 10-minute warm-up.',focus:'Focus is the hard part, so every session has a fixed timer and a focus guard that counts every time you leave the app.',prioritise:'Prioritising is the hard part, so triage gets 40 minutes on day one.',forget:'You forget fast, so we added extra quick reviews mid-day.'},
     pass:'You need a pass, so triage cuts the topics least likely to come up.',
     top:'You’re aiming high, so the plan ends with a full mock exam.'
   },
@@ -299,6 +302,7 @@ en: {
     score:{q:'How many did you get right?', o:[['good','Most','80% or more'],['partial','About half',''],['bad','Few','Less than half']]}
   },
   check:['I answered exactly what the question asked','My main point is clear at the start','Every argument has an example or evidence','I used the module’s concepts and authors','There’s a conclusion that closes the answer'],
+  prompts:['Explain {t} in one sentence.','What is the definition of {t}?','Give a real-world example of {t}.','What are the main points of {t}?','Why does {t} matter in this module?','How is {t} different from a similar concept?','Make up an exam question about {t}, then answer it.','What is the most common mistake people make about {t}?'],
   building:['Analysing your answers…','Picking the right techniques…','Spreading sessions across your days…','Your plan is ready.'],
   pills:['Morning','Midday','Evening'],
   s:{
@@ -336,7 +340,30 @@ en: {
     goTopics:'Go to topics', threeFacts:'Without looking, write down 3 key facts about {t}.', threeLead:'Use your phone’s notes or a scrap of paper. Then check them against your notes.',
     got3:'Got all 3', got12:'Got 1 or 2', got0:'Got none',
     timeUp:'Time’s up. Nice work.', levelUp:'Level up · Level {n}', fillBoth:'Fill in both sides of the card',
-    againNote:'Get it right again on another day to master it', rate:'Rate {t}', remove:'Remove {t}', lang:'PT'
+    againNote:'Get it right again on another day to master it', rate:'Rate {t}', remove:'Remove {t}', lang:'PT',
+    mapH2:'What could come up in the exam?',
+    triageLead2:'List the subjects and topics that could come up. Faster: paste the whole syllabus, one topic per line. Then rate each one and star the ones that keep showing up in past papers.',
+    topicsPh:'One topic per line, or paste the whole syllabus',
+    modeAuto:'Ready questions', modeQuick:'Quick card', modePaste:'Paste notes',
+    autoLead:'No typing. Answer each question out loud, check your notes, then rate yourself.',
+    startAuto:'Start · 5 questions', checkNotes:'Check your notes or slides. Did you get it?',
+    quickLead:'Write one important fact, then tap the word to hide. That’s your card.',
+    quickPh:'e.g. In perfect competition, firms are price takers',
+    hideWord:'Pick the word to hide', tapWord:'Tap the word to hide', cardMade:'Card created', fillOne:'Write a fact first', edit:'Edit',
+    pasteLead:'Paste from your notes, one card per line: question - answer',
+    pastePh:'Price taker - firm that can’t change the market price\nElasticity: how demand reacts to price',
+    makeFromPaste:'Create cards', pasteDone:'{n} cards created', pasteNone:'No line had a separator ( - or : )',
+    testMine:'Test my cards · {n}',
+    focusH:'Deep focus', focusSub:'Pomodoro for deep study', openBtn:'Open',
+    focusLead:'Pick a rhythm. Turn on Do Not Disturb and keep Crux open: the app counts every time you leave.',
+    pClassic:'Classic', pClassicS:'25 min focus · 5 min break · 4 cycles',
+    pDeep:'Deep', pDeepS:'50 min focus · 10 min break · 2 cycles',
+    pFlow:'Flow', pFlowS:'90 minutes straight',
+    focusTopic:'Topic (optional)', noTopic:'No specific topic',
+    startFocus:'Start focus', endFocus:'End session', phaseFocus:'Focus', phaseBreak:'Break', cycle:'Cycle {i}/{n}',
+    breakTip:'Stand up, drink some water, stay off the feed.', breakNow:'Break time. 5 deep breaths.', backFocus:'Back to focus.',
+    guardTip:'Focus guard on: leaving Crux counts as a distraction.', leftApp:'You left for {s}s. Back to it.',
+    exits:'app exits', perfect:'Perfect focus · +20 XP', focusMin:'focus min', focusDone:'Focus complete'
   }
 },
 pt: {
@@ -360,14 +387,14 @@ pt: {
     outline:{name:'Esqueletos de resposta',steps:['Pegue 3 questões de provas antigas sobre {t}.','10 minutos cada: tese, três argumentos com um exemplo cada, conclusão.','Só a estrutura. Depois faça a autocorreção.']},
     practice:{name:'Exercícios',steps:['Pegue exercícios de provas antigas sobre {t}.','Cronometre. Sem consulta na primeira tentativa.','Confira as resoluções e conte quantos você acertou.']},
     mcq:{name:'Questões',steps:['Resolva uma lista de questões de múltipla escolha sobre {t}.','Para cada erro, escreva uma linha explicando por que a certa é a certa.']},
-    mock:{name:'Simulado',steps:['Escolha uma prova antiga e marque o tempo real da prova.','Celular em outro cômodo. Sem consulta.','Quando acabar o tempo, corrija e conte quanto você acertou.']},
+    mock:{name:'Simulado',steps:['Escolha uma prova antiga e marque o tempo real da prova.','Ative o Não Perturbe e deixe o Crux aberto com o timer. Sem consulta.','Quando acabar o tempo, corrija e conte quanto você acertou.']},
     essaymock:{name:'Resposta completa',steps:['Escolha uma questão dissertativa de prova antiga.','Escreva a resposta completa à mão, no tempo da prova.','Quando acabar o tempo, faça a autocorreção.']},
     review:{name:'Revisão relâmpago'}
   },
   reasons:{
     type:{mcq:'Múltipla escolha premia quem lembra rápido, então a maior parte das sessões é de flashcards e questões.',essay:'Prova dissertativa premia estrutura, então você vai explicar os tópicos em voz alta e montar respostas no tempo.',problem:'Cálculo se aprende repetindo, então a maior parte das sessões é de exercícios de provas antigas, cronometrados.',mix:'Sua prova mistura formatos, então as sessões alternam entre flashcards, esqueletos de resposta e exercícios.'},
     covered:{none:'Você está começando do zero, então os primeiros dias focam em entender os tópicos vermelhos.',half:'Você já viu metade, então o primeiro dia fecha as lacunas antes de começar a treinar.',most:'Você já viu quase tudo, então vai direto para o teste.'},
-    struggle:{start:'Começar é o mais difícil para você, então todo plano abre com um aquecimento de 10 minutos.',focus:'O foco é o mais difícil, então toda sessão tem timer fixo e celular longe.',prioritise:'Priorizar é o mais difícil, então a triagem ganha 40 minutos no primeiro dia.',forget:'Você esquece rápido, então colocamos revisões extras no meio do dia.'},
+    struggle:{start:'Começar é o mais difícil para você, então todo plano abre com um aquecimento de 10 minutos.',focus:'O foco é o mais difícil, então toda sessão tem timer fixo e uma guarda de foco que conta cada vez que você sai do app.',prioritise:'Priorizar é o mais difícil, então a triagem ganha 40 minutos no primeiro dia.',forget:'Você esquece rápido, então colocamos revisões extras no meio do dia.'},
     pass:'Você só precisa passar, então a triagem corta os tópicos com menos chance de cair.',
     top:'Você quer nota alta, então o plano termina com um simulado completo.'
   },
@@ -378,6 +405,7 @@ pt: {
     score:{q:'Quanto você acertou?', o:[['good','A maioria','80% ou mais'],['partial','Mais ou menos metade',''],['bad','Pouco','Menos da metade']]}
   },
   check:['Respondi exatamente o que a questão pediu','Minha ideia principal está clara logo no início','Cada argumento tem um exemplo ou evidência','Usei os conceitos e autores da matéria','Tem uma conclusão que fecha a resposta'],
+  prompts:['Explique {t} em uma frase.','Qual é a definição de {t}?','Dê um exemplo real de {t}.','Quais são os pontos principais de {t}?','Por que {t} é importante nessa matéria?','Qual a diferença entre {t} e um conceito parecido?','Invente uma questão de prova sobre {t} e responda.','Qual é o erro mais comum sobre {t}?'],
   building:['Analisando suas respostas…','Escolhendo as técnicas certas…','Distribuindo as sessões pelos seus dias…','Seu plano está pronto.'],
   pills:['Manhã','Meio-dia','Noite'],
   s:{
@@ -415,7 +443,30 @@ pt: {
     goTopics:'Ir para tópicos', threeFacts:'Sem olhar, escreva 3 fatos importantes sobre {t}.', threeLead:'Use o bloco de notas do celular ou um papel. Depois confira nas suas anotações.',
     got3:'Acertei os 3', got12:'Acertei 1 ou 2', got0:'Não lembrei nenhum',
     timeUp:'Acabou o tempo. Mandou bem.', levelUp:'Subiu de nível · Nível {n}', fillBoth:'Preencha os dois lados do card',
-    againNote:'Acerte de novo em outro dia para dominar', rate:'Avaliar {t}', remove:'Remover {t}', lang:'EN'
+    againNote:'Acerte de novo em outro dia para dominar', rate:'Avaliar {t}', remove:'Remover {t}', lang:'EN',
+    mapH2:'O que pode cair na prova?',
+    triageLead2:'Liste as matérias e os tópicos que podem cair. Mais rápido: cole a ementa inteira, um tópico por linha. Depois avalie cada um e marque com estrela os que sempre aparecem nas provas antigas.',
+    topicsPh:'Um tópico por linha, ou cole a ementa inteira',
+    modeAuto:'Perguntas prontas', modeQuick:'Card rápido', modePaste:'Colar anotações',
+    autoLead:'Sem digitar nada. Responda cada pergunta em voz alta, confira nas anotações e se avalie.',
+    startAuto:'Começar · 5 perguntas', checkNotes:'Confira nas suas anotações ou slides. Acertou?',
+    quickLead:'Escreva um fato importante e toque na palavra que quer esconder. Pronto, virou card.',
+    quickPh:'ex.: Em concorrência perfeita, as empresas são tomadoras de preço',
+    hideWord:'Escolher palavra para esconder', tapWord:'Toque na palavra para esconder', cardMade:'Card criado', fillOne:'Escreva um fato primeiro', edit:'Editar',
+    pasteLead:'Cole das suas anotações, um card por linha: pergunta - resposta',
+    pastePh:'Tomadora de preço - empresa que não muda o preço de mercado\nElasticidade: o quanto a demanda reage ao preço',
+    makeFromPaste:'Criar cards', pasteDone:'{n} cards criados', pasteNone:'Nenhuma linha tinha separador ( - ou : )',
+    testMine:'Testar meus cards · {n}',
+    focusH:'Foco profundo', focusSub:'Pomodoro para estudo profundo', openBtn:'Abrir',
+    focusLead:'Escolha o ritmo. Ative o Não Perturbe e deixe o Crux aberto: o app conta cada vez que você sai.',
+    pClassic:'Clássico', pClassicS:'25 min de foco · 5 de pausa · 4 ciclos',
+    pDeep:'Profundo', pDeepS:'50 min de foco · 10 de pausa · 2 ciclos',
+    pFlow:'Flow', pFlowS:'90 minutos direto',
+    focusTopic:'Tópico (opcional)', noTopic:'Sem tópico específico',
+    startFocus:'Começar foco', endFocus:'Encerrar sessão', phaseFocus:'Foco', phaseBreak:'Pausa', cycle:'Ciclo {i}/{n}',
+    breakTip:'Levanta, bebe água, nada de rolar o feed.', breakNow:'Hora da pausa. 5 respirações fundas.', backFocus:'De volta ao foco.',
+    guardTip:'Guarda de foco ligada: sair do Crux conta como distração.', leftApp:'Você saiu por {s}s. Bora voltar.',
+    exits:'saídas do app', perfect:'Foco perfeito · +20 XP', focusMin:'min de foco', focusDone:'Foco concluído'
   }
 }};
 const L = () => I18N[S.lang] || I18N.en;
@@ -449,11 +500,16 @@ const POOL = {
 };
 
 const fresh = () => ({lang:defaultLang(), screen:'welcome', view:'plan', qi:0, a:{}, plan:null, day:0, start:null, done:{}, cur:null,
-  topics:[], cards:[], xp:0, active:{}, pills:{}, sessTopic:{}});
+  topics:[], cards:[], xp:0, active:{}, pills:{}, sessTopic:{}, focusMin:0});
 let S = fresh();
 let R = null;      // rewards collected in the current session or pill
 let CR = null;     // flashcard deck being reviewed
 let CP = 'make';   // flashcard tool phase: make | test
+let CM = 'auto';   // flashcard input mode: auto | quick | paste
+let QC = {text:'', pick:false};
+let F = null;      // deep focus run
+let G = {exits:0, awayAt:0};
+const PRESETS = {classic:{f:25,b:5,n:4}, deep:{f:50,b:10,n:2}, flow:{f:90,b:0,n:1}};
 const RANK = {red:0, orange:1, lime:2};
 const INT = {1:0, 2:1, 3:2, 4:4};
 const COLOR_NAME = new Proxy({}, {get:(_,k)=>L().color[k]});
@@ -563,18 +619,25 @@ function dueCards(){
 function weakestCards(n){
   return [...S.cards].sort((x,y)=> x.box-y.box || y.miss-x.miss || x.due-y.due).slice(0,n).map(c=>c.id);
 }
-function startDeck(ids, ctx, tid){ CR = {ids, i:0, flip:false, combo:0, best:0, ctx, tid, per:{}}; }
+function startDeck(ids, ctx, tid, temp){ CR = {ids, i:0, flip:false, combo:0, best:0, ctx, tid, per:{}, temp:temp||[]}; }
+const cardById = id => S.cards.find(x=>x.id===id) || (CR && CR.temp.find(x=>x.id===id));
+function startAuto(tid){
+  const t = topic(tid); if(!t) return;
+  const pool = [...L().prompts].sort(()=>Math.random()-.5).slice(0,5);
+  const temp = pool.map((q,i)=>({id:'tmp'+i, tid, q:q.replace('{t}', t.name), a:tr('checkNotes'), temp:true, box:1, due:S.day, got:0, miss:0}));
+  startDeck(temp.map(c=>c.id), 'session', tid, temp); CP='test';
+}
 function gradeCard(g){
-  const c = S.cards.find(x=>x.id===CR.ids[CR.i]); if(!c) return;
+  const c = cardById(CR.ids[CR.i]); if(!c) return;
   const later = CR.ctx!=='session';
   const p = CR.per[c.tid] = CR.per[c.tid] || {n:0, s:0}; p.n++;
   if(g==='got'){
-    c.box = Math.min(4, c.box+1); c.due = Math.min(lastDay(), S.day + INT[c.box]); c.got++; p.s += 1;
+    if(!c.temp){ c.box = Math.min(4, c.box+1); c.due = Math.min(lastDay(), S.day + INT[c.box]); c.got++; } p.s += 1;
     CR.combo++; CR.best = Math.max(CR.best, CR.combo); addXP(10); buzz(8);
     if(CR.combo % 5 === 0){ addXP(15); toast(tr('combo',{n:CR.combo})); buzz(30); }
   } else {
-    c.box = 1; c.due = later ? Math.min(lastDay(), S.day+1) : S.day; CR.combo = 0;
-    if(g==='uns'){ p.s += .5; addXP(4); } else { c.miss++; addXP(2); }
+    if(!c.temp){ c.box = 1; c.due = later ? Math.min(lastDay(), S.day+1) : S.day; } CR.combo = 0;
+    if(g==='uns'){ p.s += .5; addXP(4); } else { if(!c.temp) c.miss++; addXP(2); }
   }
   R.cards++; R.best = Math.max(R.best, CR.best);
   CR.i++; CR.flip = false;
@@ -598,13 +661,14 @@ function openSession(i){
   S.cur = i; const b = curBlock(), def = B[b.key];
   R = {xp:0, changes:[], best:0, cards:0, mastered:[], gap:null};
   if(def.topic && !curTopicId()){ const t = pickTopic(def.topic); if(t) S.sessTopic[sKey()] = t; }
-  CP = 'make'; CR = null;
+  CP = 'make'; CR = null; CM = 'auto'; QC = {text:'', pick:false}; G = {exits:0, awayAt:0};
   if(def.tool==='review'){ const ids = dueCards(); if(ids.length) startDeck(ids, 'review'); }
   stopT(); T.total = b.min*60; T.left = T.total;
   go('session');
 }
 function completeSession(base){
   stopT();
+  if(B[curBlock().key].mode==='focus'){ R.exits = G.exits; if(G.exits===0 && T.total-T.left >= 60){ addXP(20); R.perfect = true; } }
   S.done[sKey()] = true; addXP(base); markActive();
   go('reward');
 }
@@ -741,7 +805,7 @@ function vToday(){
       <div class="legend">${['lime','orange','red'].map(s=>`<span>${dot(s)}${COLOR_NAME[s]} · ${c(s)}</span>`).join('')}</div>
       ${S.topics.length ? `<div class="list">${byPriority(S.topics).map(t=>topicRow(t,true)).join('')}</div>`
         : `<p class="note">${tr('noTopics')}</p>`}
-      <div class="addrow"><input class="field" id="tp-in" placeholder="${tr('addTopicPh')}" autocomplete="off"><button class="btn-sm" data-act="tadd">${tr('add')}</button></div>
+      <div class="addrow"><textarea class="field" id="tp-in" rows="2" placeholder="${tr('topicsPh')}"></textarea><button class="btn-sm" data-act="tadd">${tr('add')}</button></div>
     </section>`;
   }
 
@@ -750,6 +814,7 @@ function vToday(){
     <div class="sec-h"><h3>${tr('pillsH')}</h3><span class="tag">${tr('pillsMeta',{n:pillsDone})}</span></div>
     <div class="pills">${L().pills.map((l,k)=>`<button class="pillcard ${k<pillsDone?'done':''}" data-act="pill" ${k!==pillsDone?'disabled':''}>
       <span class="ic">${k<pillsDone?'✓':k+1}</span><strong>${l}</strong><span>${k<pillsDone?'+20 XP':k===pillsDone?tr('pillReady'):tr('pillLater')}</span></button>`).join('')}</div>
+    <button class="row" data-act="focusopen"><span class="n">◎</span><span class="t"><strong>${tr('focusH')}</strong><span>${tr('focusSub')}${S.focusMin?` · ${S.focusMin} ${tr('focusMin')}`:''}</span></span><span class="go">${tr('openBtn')}</span></button>
     <div class="sec-h"><h3>${tr('sessionsH')}</h3><span class="tag">${hm(mins(list))}</span></div>
     <div class="list">
       ${list.map((b,i)=>{ const k=`${S.day}-${i}`, done=S.done[k], t=topic(S.sessTopic[k]);
@@ -781,14 +846,14 @@ function topicPicker(){
 
 function vTriage(){
   return `
-    <p class="lead">${tr('triageLead')}</p>
+    <p class="lead">${tr('triageLead2')}</p>
     <div class="legend">${['red','orange','lime'].map(s=>`<span>${dot(s)}${COLOR_NAME[s]}</span>`).join('')}<span>★ ${tr('starLabel')}</span></div>
-    <div class="addrow"><input class="field" id="tp-in" placeholder="${tr('triagePh')}" autocomplete="off"><button class="btn-sm" data-act="tadd">${tr('add')}</button></div>
+    <div class="addrow"><textarea class="field" id="tp-in" rows="3" placeholder="${tr('topicsPh')}"></textarea><button class="btn-sm" data-act="tadd">${tr('add')}</button></div>
     <div class="list">${S.topics.map(t=>topicRow(t,true)).join('')}</div>`;
 }
 
 function vDeck(){
-  const c = S.cards.find(x=>x.id===CR.ids[CR.i]); const t = topic(c?.tid);
+  const c = cardById(CR.ids[CR.i]); const t = topic(c?.tid);
   return `
     <div class="deck-top"><span class="tag">${tr('cardN',{i:CR.i+1,n:CR.ids.length})}</span><span class="combo ${CR.combo>=3?'on':''}">${tr('combo',{n:CR.combo})}</span></div>
     <div class="fcard" id="fcard">
@@ -802,13 +867,32 @@ const deckCta = () => CR.flip
   ? `<div class="grade"><button class="g-miss" data-act="grade" data-v="miss">${tr('missed')}</button><button class="g-uns" data-act="grade" data-v="uns">${tr('notSure')}</button><button class="g-got" data-act="grade" data-v="got">${tr('gotIt')}</button></div>`
   : `<button class="btn btn-primary" data-act="flip">${tr('showAns')}</button>`;
 
-function vMakerBody(tid){
+function vMakerBody(tid, withAuto=true){
   const mine = S.cards.filter(c=>c.tid===tid);
-  return `
-    <p class="note">${tr('cardTip')}</p>
-    <input class="field" id="cq" placeholder="${tr('frontPh')}" autocomplete="off">
-    <input class="field" id="ca" placeholder="${tr('backPh')}" autocomplete="off">
-    <button class="btn btn-ghost" data-act="addcard">${tr('addCard')}</button>
+  const modes = withAuto ? ['auto','quick','paste'] : ['quick','paste'];
+  if(!modes.includes(CM)) CM = modes[0];
+  const seg = `<div class="seg" style="grid-template-columns:repeat(${modes.length},1fr)" role="tablist">${modes.map(m=>`<button role="tab" data-act="cmode" data-v="${m}" aria-selected="${CM===m}">${tr({auto:'modeAuto',quick:'modeQuick',paste:'modePaste'}[m])}</button>`).join('')}</div>`;
+  let body = '';
+  if(CM==='auto'){
+    const t = topic(tid);
+    const ex = L().prompts.slice(0,2).map(q=>q.replace('{t}', t ? t.name : '…'));
+    body = `<p class="lead">${tr('autoLead')}</p><div class="mini-list">${ex.map(q=>`<div>${esc(q)}</div>`).join('')}<div>…</div></div>`;
+  } else if(CM==='quick'){
+    if(QC.pick){
+      const words = QC.text.split(/\s+/).filter(Boolean);
+      body = `<p class="lead">${tr('tapWord')}</p><div class="chips">${words.map((w,i)=>`<button class="wchip" data-act="cloze" data-v="${i}">${esc(w)}</button>`).join('')}</div>
+        <button class="link" data-act="qcback" style="justify-self:start">${tr('edit')}</button>`;
+    } else {
+      body = `<p class="lead">${tr('quickLead')}</p>
+        <textarea class="field" id="qc" rows="3" placeholder="${tr('quickPh')}">${esc(QC.text)}</textarea>
+        <button class="btn btn-ghost" data-act="qcpick">${tr('hideWord')}</button>`;
+    }
+  } else {
+    body = `<p class="lead">${tr('pasteLead')}</p>
+      <textarea class="field" id="paste" rows="6" placeholder="${esc(tr('pastePh'))}"></textarea>
+      <button class="btn btn-ghost" data-act="pastego">${tr('makeFromPaste')}</button>`;
+  }
+  return `${seg}${body}
     ${mine.length?`<div class="sec-h"><h3>${tr('onTopic',{n:mine.length, c:mine.length>1?tr('cards'):tr('card')})}</h3></div>
     <div class="mini-list">${mine.slice(-4).reverse().map(c=>`<div>${esc(c.q)}</div>`).join('')}</div>`:''}`;
 }
@@ -838,6 +922,7 @@ function vSession(){
         <button class="play" data-act="toggle" aria-label="${T.run?tr('pause'):tr('play')}" id="playbtn">${T.run?pauseIco:playIco}</button>
         <button class="round" data-act="finish" aria-label="${tr('finishLabel')}">${tr('done')}</button>
       </div>
+      <p class="tag" style="text-align:center">◎ ${tr('guardTip')}</p>
       <ol class="howto">${steps.map(s=>`<li><span>${s}</span></li>`).join('')}</ol>
     </section>${cta(`<button class="btn btn-primary" data-act="finish">${tr('finishRate')}</button>`)}`;
   }
@@ -849,15 +934,16 @@ function vSession(){
     </div>`;
 
   if(def.tool==='triage'){
-    return `<section class="screen">${head}${ctimer}<h2>${tr('mapH')}</h2>${vTriage()}</section>
+    return `<section class="screen">${head}${ctimer}<h2>${tr('mapH2')}</h2>${vTriage()}</section>
       ${cta(`<button class="btn btn-primary" data-act="triagedone" ${S.topics.length?'':'disabled'}>${S.topics.length===1?tr('triageDone1'):tr('triageDone',{n:S.topics.length})}</button>`)}`;
   }
 
   if(def.tool==='cards'){
     if(CP==='test' && CR) return `<section class="screen">${head}${vDeck()}</section>${cta(deckCta())}`;
     const n = S.cards.filter(c=>c.tid===curTopicId()).length;
-    return `<section class="screen">${head}${ctimer}<h2>${tr('makeCards')}</h2>${topicPicker()}${t?vMakerBody(t.id):''}</section>
-      ${cta(`<button class="btn btn-primary" data-act="testcards" ${n?'':'disabled'}>${tr('testYourself',{n, c:n===1?tr('card'):tr('cards')})}</button>`)}`;
+    const mineBtn = `<button class="btn ${CM==='auto'?'btn-ghost':'btn-primary'}" data-act="testcards" ${n?'':'disabled'}>${tr('testMine',{n})}</button>`;
+    return `<section class="screen">${head}${ctimer}<h2>${bname('recall')}</h2>${topicPicker()}${t?vMakerBody(t.id):''}</section>
+      ${cta(CM==='auto' ? `<button class="btn btn-primary" data-act="autostart" ${t?'':'disabled'}>${tr('startAuto')}</button>${n?mineBtn:''}` : mineBtn)}`;
   }
 
   if(def.tool==='review'){
@@ -893,14 +979,16 @@ function vAssess(){
 function vReward(){
   return `
   <section class="screen">
-    <div class="bar"><span class="tag">${R.pill?tr('pillDone'):tr('sessDone')}</span><span class="lvl"><b>Lv ${level()}</b></span></div>
+    <div class="bar"><span class="tag">${R.pill?tr('pillDone'):R.focus?tr('focusDone'):tr('sessDone')}</span><span class="lvl"><b>Lv ${level()}</b></span></div>
     <svg class="done-mark" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28"/><path d="M20 33 l8 8 l16 -18"/></svg>
     <div><div class="xp-big" id="xpbig">${R.xp}</div><span class="tag">${tr('xpEarned',{n:S.xp})}</span></div>
     ${R.mastered.map(n=>`<div class="mastered"><svg viewBox="0 0 112 112"><polygon points="${SPARK}"/></svg><span class="tag">${tr('mastered')}</span><h2>${esc(n)}</h2></div>`).join('')}
     ${R.changes.length?`<div class="changes">${R.changes.map(c=>`<div class="change"><span class="nm">${esc(c.name)}${c.note?`<br><span class="tag">${c.note}</span>`:''}</span><span class="arr">${dot(c.from)}${c.from!==c.to?`→ ${dot(c.to)}`:''}</span></div>`).join('')}</div>`:''}
+    ${R.perfect?`<div class="change"><span class="nm">◎ ${tr('perfect')}</span></div>`:''}
     <div class="stats3">
-      <div class="stat"><b>${R.cards}</b><span>${tr('cards')}</span></div>
-      <div class="stat"><b>×${R.best}</b><span>${tr('bestCombo')}</span></div>
+      ${R.exits!==undefined
+        ? `<div class="stat"><b>${R.focus ? R.mins : Math.round((T.total-T.left)/60)}</b><span>${tr('focusMin')}</span></div><div class="stat"><b>${R.exits}</b><span>${tr('exits')}</span></div>`
+        : `<div class="stat"><b>${R.cards}</b><span>${tr('cards')}</span></div><div class="stat"><b>×${R.best}</b><span>${tr('bestCombo')}</span></div>`}
       <div class="stat hot"><b>${streak()}</b><span>${tr('streak')}</span></div>
     </div>
     ${xpHeader()}
@@ -911,8 +999,64 @@ function vMaker(){
   const t = topic(R.gap);
   return `<section class="screen">
     <div class="bar"><button class="back" data-act="today" aria-label="${tr('back')}">←</button><span class="tag">${tr('fixGaps')}</span></div>
-    <h2>${esc(t?.name)}</h2>${t?vMakerBody(t.id):''}
+    <h2>${esc(t?.name)}</h2>${t?vMakerBody(t.id,false):''}
   </section>${cta(`<button class="btn btn-primary" data-act="today">${tr('saveCont')}</button>`)}`;
+}
+
+function vFocus(){
+  const head = `<div class="bar"><button class="back" data-act="focusend" aria-label="${tr('back')}">←</button><span class="tag">${tr('focusH')}</span><label class="toggle"><input type="checkbox" id="fast" ${T.fast?'checked':''}> ${tr('fast')}</label></div>`;
+  if(!F || !F.running){
+    const sel = F?.preset || 'classic';
+    return `<section class="screen">${head}
+      <h2>${tr('focusH')}</h2>
+      <p class="lead">${tr('focusLead')}</p>
+      <div class="choices">${['classic','deep','flow'].map(k=>`<button data-act="fpreset" data-v="${k}" style="${sel===k?'border-color:var(--accent-ink)':''}">${dot(sel===k?'lime':'orange')}<span style="display:grid;color:var(--fg)">${tr({classic:'pClassic',deep:'pDeep',flow:'pFlow'}[k])}<span>${tr({classic:'pClassicS',deep:'pDeepS',flow:'pFlowS'}[k])}</span></span></button>`).join('')}</div>
+      ${S.topics.length?`<label class="target" for="fsel"><span class="tag">${tr('focusTopic')}</span><select id="fsel"><option value="">${tr('noTopic')}</option>${byPriority(S.topics).map(t=>`<option value="${t.id}" ${F?.tid===t.id?'selected':''}>${esc(t.name)}</option>`).join('')}</select></label>`:''}
+    </section>${cta(`<button class="btn btn-primary" data-act="fstart">${tr('startFocus')}</button>`)}`;
+  }
+  const brk = F.phase==='break';
+  return `<section class="screen">${head}
+    <div class="sec-h"><span class="tag">${tr('cycle',{i:F.i,n:F.n})}</span><span class="pill" style="${brk?'':'color:var(--accent-ink);border-color:var(--accent-ink)'}">${brk?tr('phaseBreak'):tr('phaseFocus')}</span></div>
+    <div class="timer-zone">
+      <div class="s-orb ${T.run?'running':'paused'}" id="orb" aria-hidden="true" style="${brk?'filter:grayscale(.7)':''}"></div>
+      <div class="time" id="time">${clock(T.left)}</div>
+    </div>
+    ${F.tid&&topic(F.tid)?`<h2 style="text-align:center">${esc(topic(F.tid).name)}</h2>`:''}
+    <div class="tbar"><span id="tbar"></span></div>
+    <div class="controls">
+      <button class="play" data-act="toggle" aria-label="${T.run?tr('pause'):tr('play')}" id="playbtn">${T.run?pauseIco:playIco}</button>
+    </div>
+    <p class="tag" style="text-align:center">${brk?tr('breakTip'):'◎ '+tr('guardTip')}</p>
+    <div class="stats3">
+      <div class="stat"><b>${F.done}</b><span>${tr('phaseFocus')}</span></div>
+      <div class="stat"><b>${G.exits}</b><span>${tr('exits')}</span></div>
+      <div class="stat hot"><b>${S.focusMin + F.extra}</b><span>${tr('focusMin')}</span></div>
+    </div>
+  </section>${cta(`<button class="btn btn-ghost" data-act="focusend">${tr('endFocus')}</button>`)}`;
+}
+function startFocus(){
+  const p = PRESETS[F?.preset || 'classic'], sel = document.getElementById('fsel');
+  F = {preset:F?.preset||'classic', tid: sel ? sel.value : (F?.tid||''), f:p.f, b:p.b, n:p.n, i:1, phase:'focus', done:0, running:true, extra:0, mins:0};
+  R = {xp:0, changes:[], best:0, cards:0, mastered:[], gap:null, focus:true};
+  G = {exits:0, awayAt:0};
+  T.total = F.f*60; T.left = T.total; render(); startT();
+}
+function focusNext(){
+  if(F.phase==='focus'){
+    F.done++; F.mins += F.f; addXP(15); buzz(60);
+    if(F.i < F.n && F.b > 0){ F.phase='break'; T.total=F.b*60; T.left=T.total; toast(tr('breakNow')); render(); startT(); return; }
+    if(F.i < F.n){ F.i++; T.total=F.f*60; T.left=T.total; render(); startT(); return; }
+    finishFocus(); return;
+  }
+  F.i++; F.phase='focus'; T.total=F.f*60; T.left=T.total; toast(tr('backFocus')); buzz(40); render(); startT();
+}
+function finishFocus(){
+  stopT();
+  if(F && F.running && F.phase==='focus') F.mins += Math.floor((T.total-T.left)/60);
+  if(!F || !F.running){ F=null; go('today'); return; }
+  S.focusMin += F.mins; R.mins = F.mins; R.exits = G.exits;
+  if(F.mins >= 10){ if(G.exits===0){ addXP(20); R.perfect = true; } markActive(); }
+  F = null; go('reward');
 }
 
 function vPill(){
@@ -933,15 +1077,26 @@ function vPill(){
 }
 
 /* ---------- Timer ---------- */
+let WL = null;
 function tick(){
-  T.left = Math.max(0, T.left - (T.fast?30:1));
+  const now = Date.now(), dt = Math.max(1, Math.round((now - (T.last||now))/1000)); T.last = now;
+  T.left = Math.max(0, T.left - dt*(T.fast?30:1));
   const t=document.getElementById('time'); if(t) t.textContent = clock(T.left);
   const e=document.getElementById('elapsed'); if(e) e.textContent = clock(T.total-T.left);
   const bar=document.getElementById('tbar'); if(bar) bar.style.width = ((T.total-T.left)/T.total*100)+'%';
-  if(T.left===0){ stopT(); toast(tr('timeUp')); buzz(60); if(B[curBlock().key].mode==='focus') toAssess(); }
+  if(T.left===0){ stopT(); if(S.screen==='focus' && F){ focusNext(); return; } toast(tr('timeUp')); buzz(60); if(B[curBlock().key].mode==='focus') toAssess(); }
 }
-function startT(){ if(T.run) return; T.run=true; T.h=setInterval(tick,1000); syncT(); }
-function stopT(){ T.run=false; clearInterval(T.h); syncT(); }
+function startT(){ if(T.run) return; T.run=true; T.last=Date.now(); T.h=setInterval(tick,1000); syncT(); try{ navigator.wakeLock && navigator.wakeLock.request('screen').then(l=>WL=l).catch(()=>{}); }catch(e){} }
+function stopT(){ T.run=false; clearInterval(T.h); syncT(); try{ WL && WL.release(); WL=null; }catch(e){} }
+document.addEventListener('visibilitychange', ()=>{
+  const guarded = T.run && (S.screen==='focus' || (S.screen==='session' && B[curBlock().key].mode==='focus'));
+  if(document.hidden){ if(guarded) G.awayAt = Date.now(); return; }
+  if(G.awayAt){
+    const sec = Math.round((Date.now()-G.awayAt)/1000); G.awayAt = 0;
+    if(sec >= 3){ G.exits++; toast(tr('leftApp',{s:sec})); buzz(40); if(S.screen==='focus') render(); }
+  }
+  if(T.run) tick();
+});
 function syncT(){
   const o=document.getElementById('orb'); if(o) o.className='s-orb '+(T.run?'running':'paused');
   const p=document.getElementById('playbtn'); if(p){ p.innerHTML=T.run?pauseIco:playIco; p.setAttribute('aria-label',T.run?tr('pause'):tr('play')); }
@@ -1008,7 +1163,7 @@ function quizOut(next, dir){
 }
 function animateScene(){
   if(!FX()) return;
-  const scene = S.screen + (S.screen==='quiz' ? S.qi : S.screen==='today' ? S.day+S.view : S.screen==='session' ? sKey() : '');
+  const scene = S.screen + (S.screen==='quiz' ? S.qi : S.screen==='today' ? S.day+S.view : S.screen==='session' ? sKey() : S.screen==='focus' ? (F&&F.running?'run'+F.i+F.phase:'setup') : '');
   if(scene === lastScene) return;
   lastScene = scene;
   try{
@@ -1035,6 +1190,7 @@ function animateScene(){
       fadeUp('.change', 700, 90, 12); fadeUp('.stats3 .stat', 900, 70, 10);
     }
     if(S.screen==='pill'){ popCard(); fadeUp('.choices button', 200, 60); }
+    if(S.screen==='focus'){ if(document.querySelector('.s-orb')) anime.animate('.s-orb', { scale: [0.6,1], opacity: [0,1], duration: 900, ease: 'out(4)' }); fadeUp('.choices button', 150, 60); }
   }catch(e){}
 }
 
@@ -1046,7 +1202,7 @@ function restore(){
     const r = JSON.parse(localStorage.getItem(KEY)||'null');
     if(!r || !r.plan) return;
     S = Object.assign(fresh(), r);
-    if(['session','assess','reward','pill','maker','building'].includes(S.screen)) S.screen='today';
+    if(['session','assess','reward','pill','maker','building','focus'].includes(S.screen)) S.screen='today';
     const st = new Date(S.start || Date.now()); st.setHours(0,0,0,0);
     const now = new Date(); now.setHours(0,0,0,0);
     S.day = Math.min(Math.max(0, Math.round((now-st)/864e5)), S.plan.length-1);
@@ -1054,10 +1210,10 @@ function restore(){
 }
 
 function render(){
-  const v = {welcome:vWelcome,quiz:vQuiz,building:vBuilding,reveal:vReveal,save:vSave,today:vToday,session:vSession,assess:vAssess,reward:vReward,maker:vMaker,pill:vPill}[S.screen]();
+  const v = {welcome:vWelcome,quiz:vQuiz,building:vBuilding,reveal:vReveal,save:vSave,today:vToday,session:vSession,assess:vAssess,reward:vReward,maker:vMaker,pill:vPill,focus:vFocus}[S.screen]();
   document.getElementById('app').innerHTML = v;
   persist();
-  if(S.screen==='session'){
+  if(S.screen==='session' || S.screen==='focus'){
     const bar=document.getElementById('tbar'); if(bar) bar.style.width=((T.total-T.left)/T.total*100)+'%';
     const f=document.getElementById('fast'); if(f) f.onchange=()=>{T.fast=f.checked;};
     const sel=document.getElementById('sel-topic'); if(sel) sel.onchange=()=>{ S.sessTopic[sKey()] = sel.value; render(); };
@@ -1067,8 +1223,10 @@ function render(){
 
 /* ---------- Actions ---------- */
 function addTopic(){
-  const i = document.getElementById('tp-in'); const name = i && i.value.trim(); if(!name) return;
-  S.topics.push({id:uid(), name, status:'red', star:false, hits:[]});
+  const i = document.getElementById('tp-in'); if(!i) return;
+  const names = i.value.split(/\n|;/).map(x=>x.replace(/^[\s\-•*\d.)]+/, '').trim()).filter(Boolean);
+  if(!names.length) return;
+  names.forEach(name => { if(!S.topics.some(t=>t.name.toLowerCase()===name.toLowerCase())) S.topics.push({id:uid(), name, status:'red', star:false, hits:[]}); });
   buzz(6); render(); const n = document.getElementById('tp-in'); if(n) n.focus();
 }
 function addCard(tid){
@@ -1078,9 +1236,11 @@ function addCard(tid){
   addXP(5); buzz(6); render(); const n = document.getElementById('cq'); if(n) n.focus();
 }
 
+function clickAct(a){ const b=document.querySelector(`[data-act="${a}"]`); if(b) b.click(); }
 document.addEventListener('keydown', e=>{
   if(e.key!=='Enter') return;
-  if(e.target.id==='tp-in'){ e.preventDefault(); addTopic(); }
+  if(e.target.id==='tp-in' && !e.shiftKey){ e.preventDefault(); addTopic(); }
+  if(e.target.id==='qc'){ e.preventDefault(); clickAct('qcpick'); }
   if(e.target.id==='cq'){ e.preventDefault(); const a=document.getElementById('ca'); if(a) a.focus(); }
   if(e.target.id==='ca'){ e.preventDefault(); addCard(S.screen==='maker' ? R.gap : curTopicId()); }
 });
@@ -1110,7 +1270,7 @@ document.addEventListener('click', e=>{
   }
   else if(act==='save') go('save');
   else if(act==='toReveal') go('reveal');
-  else if(act==='today'){ stopT(); go('today'); }
+  else if(act==='today'){ stopT(); CR=null; go('today'); }
   else if(act==='restart'){ try{localStorage.removeItem(KEY)}catch(err){} const lg=S.lang; S=fresh(); S.lang=lg; lastScene=''; render(); }
   else if(act==='lang'){ S.lang = S.lang==='pt' ? 'en' : 'pt'; document.documentElement.lang = S.lang; lastScene=''; render(); }
   else if(act==='day'){ S.day=+v; render(); }
@@ -1137,7 +1297,31 @@ document.addEventListener('click', e=>{
     const tid = curTopicId(); if(tid) applyResult(tid, misses<=1 ? 'good' : misses<=3 ? 'partial' : 'bad');
     completeSession(30);
   }
-  else if(act==='maker') go('maker');
+  else if(act==='maker'){ CM='quick'; QC={text:'',pick:false}; go('maker'); }
+  else if(act==='cmode'){ CM=v; QC.pick=false; render(); }
+  else if(act==='autostart'){ startAuto(curTopicId()); render(); popCard(); }
+  else if(act==='qcpick'){ const q=document.getElementById('qc'); const txt=q?q.value.trim():''; if(!txt){ toast(tr('fillOne')); return; } if(txt.split(/\s+/).length<2){ toast(tr('fillOne')); return; } QC={text:txt, pick:true}; render(); }
+  else if(act==='qcback'){ QC.pick=false; render(); }
+  else if(act==='cloze'){
+    const tid = S.screen==='maker' ? R.gap : curTopicId(); const words = QC.text.split(/\s+/).filter(Boolean); const i=+v;
+    const ans = words[i].replace(/^[("'“]+|[.,;:!?)"'”]+$/g,'') || words[i];
+    const q = words.map((w,j)=> j===i ? w.replace(ans,'_____') : w).join(' ');
+    S.cards.push({id:uid(), tid, q, a:ans, box:1, due:S.day, got:0, miss:0});
+    QC={text:'',pick:false}; addXP(5); buzz(8); toast(tr('cardMade')); render(); const n=document.getElementById('qc'); if(n) n.focus();
+  }
+  else if(act==='pastego'){
+    const tid = S.screen==='maker' ? R.gap : curTopicId(); const ta=document.getElementById('paste'); if(!ta) return;
+    let made=0;
+    ta.value.split('\n').forEach(line=>{
+      const m = line.replace(/^[\s\-•*\d.)]+/, '').match(/^(.+?)\s*(?:\s-\s|\s–\s|\s—\s|:|\t|=)\s*(.+)$/);
+      if(m && m[1].trim() && m[2].trim()){ S.cards.push({id:uid(), tid, q:m[1].trim(), a:m[2].trim(), box:1, due:S.day, got:0, miss:0}); made++; }
+    });
+    if(made){ addXP(5*made); toast(tr('pasteDone',{n:made})); render(); } else toast(tr('pasteNone'));
+  }
+  else if(act==='focusopen'){ F = {preset:'classic', tid:'', running:false}; T.total=25*60; T.left=T.total; go('focus'); }
+  else if(act==='fpreset'){ const sel=document.getElementById('fsel'); F = {...(F||{}), preset:v, tid: sel?sel.value:'', running:false}; render(); }
+  else if(act==='fstart') startFocus();
+  else if(act==='focusend') finishFocus();
   else if(act==='pill') startPill();
   else if(act==='pillrate'){ applyResult(id, v); finishPill(); }
 });
