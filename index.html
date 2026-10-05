@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Crux Alpha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single phone column, one screen at a time, CTA pinned to the bottom of each screen */
+:root{
+  --bg:#050604; --surface:#10120c; --surface-2:#191c12; --line:#262a1c;
+  --fg:#F2F4EC; --muted:#9A9F8C;
+  --accent:#DBEF90; --accent-deep:#243100; --on-accent:#141a00; --accent-ink:#DBEF90;
+  --unsure:#FF9F43; --unknown:#FF6B6B;
+  --glow:rgba(190,224,90,.55);
+  --display:"Urbanist", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body:"Urbanist", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){
+  --bg:#F3F4EE; --surface:#FFFFFF; --surface-2:#E9ECDF; --line:#DCE0CF;
+  --fg:#0E1008; --muted:#5D6250;
+  --accent:#C8E36A; --accent-deep:#3F5600; --on-accent:#141a00; --accent-ink:#4A6600;
+  --unsure:#C96A00; --unknown:#D63B3B; --glow:rgba(150,190,40,.45); color-scheme:light; } }
+:root[data-theme="light"]{
+  --bg:#F3F4EE; --surface:#FFFFFF; --surface-2:#E9ECDF; --line:#DCE0CF;
+  --fg:#0E1008; --muted:#5D6250;
+  --accent:#C8E36A; --accent-deep:#3F5600; --on-accent:#141a00; --accent-ink:#4A6600;
+  --unsure:#C96A00; --unknown:#D63B3B; --glow:rgba(150,190,40,.45); color-scheme:light; }
+
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible{outline:2px solid var(--accent-ink);outline-offset:3px}
+
+.app{max-width:430px;margin:0 auto;min-height:100%;position:relative;padding-inline:20px;display:flex;flex-direction:column}
+.screen{display:flex;flex-direction:column;flex:1;padding-block:20px 120px;gap:20px}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:40px}
+.brand{font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
+.brand i{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--accent),var(--accent-deep));box-shadow:0 0 14px var(--glow)}
+.tag{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.pill{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted)}
+h1,h2{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.02em}
+h1{font-size:40px;line-height:1.05;font-weight:500}
+h2{font-size:28px;line-height:1.15;font-weight:500}
+p{margin:0}
+.lead{color:var(--muted);font-size:17px;max-width:34ch}
+.ink{color:var(--accent-ink)}
+
+.cta-wrap{position:fixed;left:0;right:0;bottom:0;padding:16px 20px calc(16px + env(safe-area-inset-bottom,0px));background:linear-gradient(to top,var(--bg) 70%,transparent);display:flex;justify-content:center;z-index:5}
+.cta-inner{width:100%;max-width:390px;display:flex;flex-direction:column;gap:10px}
+.btn{width:100%;padding:17px 20px;border-radius:18px;font-weight:600;font-size:17px;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-primary{background:var(--accent);color:var(--on-accent)}
+.btn-primary:disabled{opacity:.35;cursor:default}
+.btn-ghost{background:var(--surface);border:1px solid var(--line)}
+.link{color:var(--muted);font-size:14px;text-decoration:underline;text-underline-offset:3px}
+
+/* Welcome */
+.hero-orb{width:220px;height:220px;margin:24px auto 8px;border-radius:50%;background:radial-gradient(circle at 50% 45%,var(--accent) 0%,rgba(219,239,144,.45) 30%,transparent 68%);filter:blur(2px);animation:breathe 5s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(.94);opacity:.85}50%{transform:scale(1.04);opacity:1}}
+.steps-mini{display:grid;gap:10px;margin-top:4px}
+.steps-mini div{display:flex;gap:12px;align-items:baseline;color:var(--muted);font-size:15px}
+.steps-mini b{font-family:var(--mono);font-weight:500;font-size:12px;color:var(--accent-ink)}
+
+/* Quiz */
+.progress{height:4px;background:var(--surface-2);border-radius:4px;overflow:hidden;flex:1}
+.progress span{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .3s}
+.back{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);display:grid;place-items:center;font-size:18px}
+.options{display:grid;gap:10px}
+.opt{text-align:left;padding:18px;border-radius:16px;background:var(--surface);border:1px solid var(--line);font-size:17px;font-weight:500;display:flex;justify-content:space-between;align-items:center;gap:12px;transition:border-color .15s,background .15s}
+.opt small{display:block;color:var(--muted);font-weight:400;font-size:14px;margin-top:2px}
+.opt[aria-pressed="true"]{border-color:var(--accent-ink);background:var(--surface-2)}
+.opt .dot{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);flex:none}
+.opt[aria-pressed="true"] .dot{background:var(--accent);border-color:var(--accent);box-shadow:0 0 12px var(--glow)}
+
+/* Building */
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px}
+.build-orb{width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(219,239,144,.45) 0%,transparent 65%);animation:breathe 1.6s ease-in-out infinite;position:absolute}
+.build-stage{position:relative;width:220px;height:220px;display:grid;place-items:center}
+.morph{width:150px;height:150px;position:relative;overflow:visible;filter:drop-shadow(0 0 18px var(--glow))}
+.morph polygon{fill:var(--accent)}
+.brand svg{width:16px;height:16px;filter:drop-shadow(0 0 6px var(--glow))}
+.brand svg polygon{fill:var(--accent)}
+.done-mark{width:64px;height:64px}
+.done-mark path,.done-mark circle{fill:none;stroke:var(--accent-ink);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.build-line{font-size:18px;color:var(--muted);min-height:28px}
+
+/* Reveal */
+.count{display:flex;align-items:baseline;gap:10px}
+.count .big{font-family:var(--display);font-size:72px;line-height:.9;font-weight:300;color:var(--accent-ink);font-variant-numeric:tabular-nums}
+.why{display:grid;gap:10px}
+.why div{display:flex;gap:10px;font-size:15px;color:var(--muted)}
+.why div::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-top:9px}
+.days{display:grid;gap:10px}
+.day{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;display:grid;gap:10px}
+.day-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.day-head strong{font-family:var(--display);font-weight:600;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:13px;padding:5px 10px;border-radius:999px;background:var(--surface-2);color:var(--fg)}
+.chip.rv{background:transparent;border:1px dashed var(--accent-ink);color:var(--accent-ink)}
+
+/* Today */
+.daytabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.daytabs button{flex:none;padding:8px 14px;border-radius:999px;border:1px solid var(--line);font-size:14px;color:var(--muted)}
+.daytabs button[aria-selected="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
+.stat b{display:block;font-family:var(--display);font-weight:400;font-size:32px;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}
+.stat.unsure b{color:var(--unsure)}
+.list{display:grid;gap:8px}
+.row{display:flex;align-items:center;gap:14px;padding:14px;border-radius:16px;background:var(--surface);border:1px solid var(--line);text-align:left;width:100%}
+.row .n{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);font-size:12px;border:1px solid var(--line);flex:none;color:var(--muted)}
+.row .t{flex:1;min-width:0}
+.row .t strong{display:block;font-weight:600;font-size:16px}
+.row .t span{font-size:13px;color:var(--muted)}
+.row .go{font-size:13px;font-weight:600;color:var(--accent-ink)}
+.row.done{opacity:.55}
+.row.done .n{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.row.next{border-color:var(--accent-ink)}
+.note{font-size:14px;color:var(--muted);padding:12px 14px;border-radius:14px;background:var(--surface-2)}
+
+/* Session */
+.timer-zone{position:relative;display:grid;place-items:center;margin:8px 0}
+.s-orb{width:250px;height:250px;max-width:100%;border-radius:50%;background:radial-gradient(circle at 50% 50%,var(--accent) 0%,rgba(219,239,144,.42) 28%,rgba(36,49,0,.25) 55%,transparent 70%);transition:opacity .4s}
+.s-orb.running{animation:breathe 4s ease-in-out infinite}
+.s-orb.paused{opacity:.45}
+.time{position:absolute;font-family:var(--display);font-weight:300;font-size:60px;font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:var(--fg);text-shadow:0 2px 20px rgba(0,0,0,.35)}
+.tbar{height:4px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.tbar span{display:block;height:100%;background:var(--fg);width:0}
+.tmeta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.controls{display:flex;align-items:center;justify-content:center;gap:22px}
+.round{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:13px;color:var(--muted)}
+.play{width:72px;height:72px;border-radius:50%;background:var(--fg);color:var(--bg);display:grid;place-items:center}
+.play svg{width:26px;height:26px;fill:currentColor}
+.howto{display:grid;gap:10px;counter-reset:s}
+.howto li{list-style:none;display:flex;gap:12px;font-size:15px}
+.howto li::before{counter-increment:s;content:counter(s);flex:none;width:24px;height:24px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;font-family:var(--mono);font-size:11px;color:var(--accent-ink);margin-top:1px}
+.howto{padding:0;margin:0}
+.unsure-btn{border:1px solid var(--unsure);color:var(--unsure);background:transparent}
+.toggle{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);font-family:var(--mono)}
+.toggle input{accent-color:var(--accent-deep)}
+
+/* Check-in */
+.feel{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.feel button{padding:22px 8px;border-radius:18px;background:var(--surface);border:1px solid var(--line);font-weight:600;display:grid;gap:4px}
+.feel button span{font-size:12px;font-weight:400;color:var(--muted)}
+.checklist{display:grid;gap:8px}
+.checklist label{display:flex;gap:10px;align-items:flex-start;font-size:15px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line)}
+.checklist input{margin-top:4px;accent-color:var(--accent-deep)}
+
+.toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:all .25s;z-index:10;max-width:calc(100% - 40px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.alpha{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--on-accent);background:var(--accent);padding:2px 6px;border-radius:5px}
+
+.opt .dot{transition:transform .2s}
+.split-wrap{display:inline-block}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/animejs@4.5.0/dist/bundles/anime.umd.min.js"></script>
+<div class="app" id="app"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const QUIZ = [
+  {k:'when', q:'When is your exam?', o:[['1','Tomorrow'],['3','In 2–3 days'],['5','In 4–7 days'],['7','In 1–2 weeks']]},
+  {k:'hours', q:'How many hours a day can you realistically study?', o:[['2','Less than 1 hour'],['3','1–2 hours'],['5','2–4 hours'],['7','4+ hours']]},
+  {k:'type', q:'What kind of exam is it?', o:[['mcq','Multiple choice'],['essay','Written answers / essays'],['problem','Problem-solving / calculations'],['mix','A mix']]},
+  {k:'covered', q:'How much of the content have you already covered?', o:[['none','Barely started'],['half','About half'],['most','Most of it','I just need to revise']]},
+  {k:'grade', q:'What grade do you need?', o:[['pass','Just to pass'],['solid','A solid grade'],['top','A top grade']]},
+  {k:'struggle', q:'What’s your biggest struggle right now?', o:[['start','Getting started'],['focus','Staying focused'],['prioritise','Not knowing what to prioritise'],['forget','Forgetting what I studied']]},
+  {k:'slot', q:'When can you study?', o:[['Morning','Mornings'],['Afternoon','Afternoons'],['Evening','Evenings'],['Late night','After work / late night']]}
+];
+
+const B = {
+  warmup:{name:'Warm-up',min:10,steps:['Open your notes or slides for this module.','Write down the exam date and the topics you know will come up.','That’s it. Ten minutes and you’re moving.']},
+  triage:{name:'Triage',min:30,steps:['List every topic from the module outline or lecture slides.','Mark each one: lime = I know it, orange = not sure, red = no idea.','Open past papers and star the topics that keep coming up.','Your order of attack: red and starred first, then orange.']},
+  feynman:{name:'Feynman',min:25,steps:['Pick your top red topic.','Explain it out loud or in writing, as if to a friend who never took the class.','Where you stall or go vague, that’s the gap. Go back to your notes for that point only.','Explain it again, simpler.']},
+  recall:{name:'Active recall',min:25,steps:['Make flashcards for your red and orange topics: question on the front, answer on the back.','Go through them without peeking. Say the answer before you flip.','Tap “Not sure” on anything shaky.']},
+  blurt:{name:'Blurting',min:20,steps:['Pick a topic and close everything.','Write everything you remember for 10 minutes.','Open your notes and mark what you missed. Each miss goes to tonight’s review.']},
+  outline:{name:'Answer outlines',min:30,steps:['Take 3 essay questions from past papers.','10 minutes each: thesis, three arguments with one example each, conclusion.','Structure only. No full sentences.']},
+  practice:{name:'Practice problems',min:40,steps:['Take past-paper problems on your red topics.','Time yourself. No notes on the first attempt.','Check the solution and redo every one you got wrong.']},
+  mcq:{name:'Practice questions',min:25,steps:['Do a set of multiple-choice questions on your weakest topics.','For every wrong answer, write one line on why the right one is right.']},
+  mock:{name:'Mock exam',min:60,steps:['Pick a past paper and set the real exam time.','Phone in another room. No notes.','When time is up, run the self-check.']},
+  essaymock:{name:'Full answer',min:45,steps:['Pick one past-paper essay question.','Write the full answer by hand, in exam time.','When time is up, run the self-check.']},
+  review:{name:'Quick review',min:15,steps:['Everything you got wrong or marked “Not sure” today is in this list.','Go through each item. Still shaky? It comes back tomorrow.','Got it? It turns lime and leaves the list.']}
+};
+
+const POOL = {
+  mcq:{learn:'recall',drill:['recall','mcq']},
+  essay:{learn:'feynman',drill:['blurt','outline']},
+  problem:{learn:'feynman',drill:['practice','recall']},
+  mix:{learn:'feynman',drill:['recall','outline','practice']}
+};
+
+let S = {screen:'welcome', qi:0, a:{}, plan:null, day:0, unsure:0, cur:null, done:{}};
+
+function buildPlan(a){
+  const D = +a.when, per = +a.hours, pool = POOL[a.type];
+  const days = [];
+  let di = 0, fey = 0;
+  for(let d=0; d<D; d++){
+    const list = [];
+    const last = d===D-1 && D>1;
+    const cap = last ? Math.max(2, per-1) : per;
+    if(d===0){
+      if(a.struggle==='start') list.push('warmup');
+      list.push('triage');
+    }
+    if(last){
+      if(a.grade!=='pass' || D>=3) list.push(a.type==='essay' ? 'essaymock' : 'mock');
+    }
+    let alt = 0;
+    while(list.length < cap-1){
+      const learnPhase = (a.covered==='none' && d < Math.ceil(D/2)) || (a.covered==='half' && d===0);
+      if(a.struggle==='forget' && list.length===Math.floor(cap/2) && !list.includes('review')){ list.push('review'); continue; }
+      if(learnPhase && alt%2===0 && !last){ list.push(pool.learn); }
+      else { list.push(pool.drill[di % pool.drill.length]); di++; }
+      alt++;
+    }
+    list.push('review');
+    days.push(list.map(k=>{
+      const b = {...B[k], key:k};
+      if(k==='triage' && a.struggle==='prioritise') b.min = 40;
+      if(k==='feynman'){ fey++; b.label = `Feynman · red topic ${fey}`; }
+      return b;
+    }));
+  }
+  return days;
+}
+
+function reasons(a){
+  const r = [];
+  r.push({mcq:'Multiple choice rewards fast recall, so most sessions are flashcards and practice questions.',essay:'Essays reward structure, so you’ll explain topics out loud and outline answers against the clock.',problem:'Calculations reward reps, so most sessions are timed past-paper problems.',mix:'Your exam mixes formats, so sessions rotate between recall, outlines and problems.'}[a.type]);
+  r.push({none:'You’re starting from scratch, so the first days focus on understanding your red topics.',half:'You’ve covered half, so day one fills the gaps before drilling starts.',most:'You’ve seen most of it, so you skip straight to testing yourself.'}[a.covered]);
+  r.push({start:'You struggle to start, so each plan opens with a 10-minute warm-up.',focus:'Focus is the hard part, so every session is a fixed timer with your phone away.',prioritise:'Prioritising is the hard part, so triage gets 40 minutes on day one.',forget:'You forget fast, so we added extra quick reviews mid-day.'}[a.struggle]);
+  if(a.grade==='pass') r.push('You need a pass, so triage cuts the topics least likely to come up.');
+  if(a.grade==='top') r.push('You’re aiming high, so the plan ends with a full mock exam.');
+  return r;
+}
+
+const fmtDate = (off) => { const d = S.start ? new Date(S.start) : new Date(); d.setDate(d.getDate()+off); return d.toLocaleDateString('en-IE',{weekday:'short',day:'numeric',month:'short'}); };
+const mins = (list) => list.reduce((s,b)=>s+b.min,0);
+const hm = (m) => m>=60 ? `${Math.floor(m/60)}h${m%60?` ${m%60}m`:''}` : `${m} min`;
+const examIn = () => ({'1':1,'3':3,'5':6,'7':10})[S.a.when];
+
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200); }
+const KEY='crux-alpha-v1';
+function persist(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function restore(){
+  try{
+    const r = JSON.parse(localStorage.getItem(KEY)||'null');
+    if(!r || !r.plan) return;
+    S = r;
+    if(['session','checkin','building'].includes(S.screen)) S.screen='today';
+    const st = new Date(S.start); st.setHours(0,0,0,0);
+    const now = new Date(); now.setHours(0,0,0,0);
+    S.day = Math.min(Math.max(0, Math.round((now-st)/864e5)), S.plan.length-1);
+  }catch(e){}
+}
+function go(screen){ S.screen=screen; render(); window.scrollTo(0,0); }
+
+const brand = `<div class="brand"><svg viewBox="0 0 112 112" aria-hidden="true"><polygon points="56,0 64,48 112,56 64,64 56,112 48,64 0,56 48,48"/></svg>Crux <span class="alpha">alpha</span></div>`;
+
+function vWelcome(){ return `
+  <section class="screen">
+    <div class="bar">${brand}</div>
+    <div class="hero-orb" aria-hidden="true"></div>
+    <h1>Exam coming up?<br><span class="ink">Let’s get you ready.</span></h1>
+    <p class="lead">Tell us how much time you have. We’ll build a plan and guide you through every session until exam day.</p>
+    <div class="steps-mini">
+      <div><b>60s</b>Seven quick questions</div>
+      <div><b>PLAN</b>A day-by-day plan built for your exam</div>
+      <div><b>GO</b>Guided sessions with a timer and clear steps</div>
+    </div>
+  </section>
+  <div class="cta-wrap"><div class="cta-inner"><button class="btn btn-primary" data-act="start">Start</button></div></div>`; }
+
+function vQuiz(){
+  const q = QUIZ[S.qi], sel = S.a[q.k];
+  return `
+  <section class="screen">
+    <div class="bar">
+      <button class="back" data-act="qback" aria-label="Back">←</button>
+      <div class="progress" aria-hidden="true"><span style="width:${(S.qi+1)/QUIZ.length*100}%"></span></div>
+      <span class="tag">${S.qi+1}/${QUIZ.length}</span>
+    </div>
+    <h2>${q.q}</h2>
+    <div class="options">
+      ${q.o.map(([v,l,s])=>`<button class="opt" id="opt-${q.k}-${v}" data-act="pick" data-v="${v}" aria-pressed="${sel===v}"><span>${l}${s?`<small>${s}</small>`:''}</span><span class="dot"></span></button>`).join('')}
+    </div>
+  </section>
+  <div class="cta-wrap"><div class="cta-inner"><button class="btn btn-primary" data-act="qnext" ${sel?'':'disabled'}>${S.qi===QUIZ.length-1?'Build my plan':'Continue'}</button></div></div>`;
+}
+
+function vBuilding(){ return `
+  <section class="screen"><div class="center">
+    <div class="build-stage" aria-hidden="true">
+      <div class="build-orb"></div>
+      <svg class="morph" viewBox="0 0 112 112"><polygon id="morph-a" points="56,0 60,52 112,56 60,60 56,112 52,60 0,56 52,52"/><polygon id="morph-b" points="56,0 60,52 112,56 60,60 56,112 52,60 0,56 52,52" style="opacity:0"/></svg>
+    </div>
+    <div class="build-line" id="bline">Analysing your answers…</div>
+  </div></section>`; }
+
+function vReveal(){
+  const p = S.plan, n = examIn();
+  return `
+  <section class="screen">
+    <div class="bar">${brand}<span class="pill">Your plan</span></div>
+    <div class="count"><span class="big">${n}</span><span>day${n>1?'s':''} to your exam<br><span class="tag">${p.length}-day plan · ${S.a.slot.toLowerCase()} sessions</span></span></div>
+    <div class="why">${reasons(S.a).map(r=>`<div>${r}</div>`).join('')}</div>
+    <div class="days">
+      ${p.map((list,i)=>`<div class="day">
+        <div class="day-head"><strong>Day ${i+1}${i===p.length-1&&p.length>1?' · lighter':''}</strong><span class="tag">${fmtDate(i)} · ${hm(mins(list))}</span></div>
+        <div class="chips">${list.map(b=>`<span class="chip ${b.key==='review'?'rv':''}">${b.name}</span>`).join('')}</div>
+        ${i===p.length-1&&p.length>1?'<p class="tag">Sleep early. It helps the last two days stick.</p>':''}
+      </div>`).join('')}
+    </div>
+  </section>
+  <div class="cta-wrap"><div class="cta-inner"><button class="btn btn-primary" data-act="save">Save my plan</button></div></div>`;
+}
+
+function vSave(){ return `
+  <section class="screen">
+    <div class="bar"><button class="back" data-act="toReveal" aria-label="Back">←</button></div>
+    <h2>Save your plan</h2>
+    <p class="lead">Create an account so your plan and progress stay with you. We’ll remind you when it’s time for your next session.</p>
+    <p class="note">Alpha build: sign-in is simulated. Your plan and progress are saved on this device only.</p>
+  </section>
+  <div class="cta-wrap"><div class="cta-inner">
+    <button class="btn btn-primary" data-act="today">Continue with Apple</button>
+    <button class="btn btn-ghost" data-act="today">Continue with Google</button>
+    <button class="btn btn-ghost" data-act="today">Continue with email</button>
+  </div></div>`; }
+
+function vToday(){
+  const p = S.plan, list = p[S.day];
+  const doneN = list.filter((_,i)=>S.done[`${S.day}-${i}`]).length;
+  const next = list.findIndex((_,i)=>!S.done[`${S.day}-${i}`]);
+  const left = examIn() - S.day;
+  return `
+  <section class="screen">
+    <div class="bar">${brand}<button class="link" data-act="restart">Retake quiz</button></div>
+    <div class="count"><span class="big">${left}</span><span>day${left>1?'s':''} to your exam<br><span class="tag">${fmtDate(S.day)}</span></span></div>
+    <div class="daytabs" role="tablist">${p.map((_,i)=>`<button role="tab" id="tab-${i}" data-act="day" data-v="${i}" aria-selected="${i===S.day}">Day ${i+1}</button>`).join('')}</div>
+    <div class="stats">
+      <div class="stat"><b>${doneN}/${list.length}</b><span>sessions done</span></div>
+      <div class="stat unsure"><b>${S.unsure}</b><span>items not sure yet</span></div>
+    </div>
+    <div class="list">
+      ${list.map((b,i)=>{ const done=S.done[`${S.day}-${i}`]; return `
+        <button class="row ${done?'done':''} ${i===next?'next':''}" data-act="open" data-v="${i}">
+          <span class="n">${done?'✓':i+1}</span>
+          <span class="t"><strong>${b.label||b.name}</strong><span>${b.min} min${b.key==='review'?` · ${S.unsure} items`:''}</span></span>
+          <span class="go">${done?'Redo':i===next?'Start':''}</span>
+        </button>`; }).join('')}
+    </div>
+    ${next===-1?'<p class="note">Day done. Close the app and rest. Sleep is part of the plan.</p>':''}
+  </section>
+  ${next>-1?`<div class="cta-wrap"><div class="cta-inner"><button class="btn btn-primary" data-act="open" data-v="${next}">Start next session · ${list[next].min} min</button></div></div>`:''}`;
+}
+
+let T = {left:0,total:0,run:false,h:null,fast:false};
+function vSession(){
+  const b = S.plan[S.day][S.cur];
+  return `
+  <section class="screen">
+    <div class="bar">
+      <button class="back" data-act="exit" aria-label="Leave session">←</button>
+      <span class="tag">Day ${S.day+1} · session ${S.cur+1}</span>
+      <label class="toggle"><input type="checkbox" id="fast" ${T.fast?'checked':''}> fast demo</label>
+    </div>
+    <div class="timer-zone">
+      <div class="s-orb ${T.run?'running':'paused'}" id="orb" aria-hidden="true"></div>
+      <div class="time" id="time" aria-live="off">${clock(T.left)}</div>
+    </div>
+    <div style="display:grid;gap:8px;text-align:center">
+      <h2>${b.label||b.name}</h2>
+      ${b.key==='review'?`<p class="tag">${S.unsure} item${S.unsure===1?'':'s'} to go through</p>`:''}
+    </div>
+    <div class="tbar"><span id="tbar"></span></div>
+    <div class="tmeta"><span id="elapsed">${clock(T.total-T.left)}</span><span>${clock(T.total)}</span></div>
+    <div class="controls">
+      <button class="round" data-act="reset" aria-label="Restart timer">↺</button>
+      <button class="play" data-act="toggle" aria-label="${T.run?'Pause':'Play'}" id="playbtn">${T.run?pauseIco:playIco}</button>
+      <button class="round" data-act="finish" aria-label="Finish session">Done</button>
+    </div>
+    <ol class="howto">${b.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+  </section>
+  <div class="cta-wrap"><div class="cta-inner"><button class="btn unsure-btn" data-act="unsure">Not sure about this one</button></div></div>`;
+}
+const playIco = '<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>';
+const pauseIco = '<svg viewBox="0 0 24 24"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z"/></svg>';
+const clock = s => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+
+function tick(){
+  T.left = Math.max(0, T.left - (T.fast?30:1));
+  const t=document.getElementById('time'); if(t) t.textContent = clock(T.left);
+  const e=document.getElementById('elapsed'); if(e) e.textContent = clock(T.total-T.left);
+  const bar=document.getElementById('tbar'); if(bar) bar.style.width = ((T.total-T.left)/T.total*100)+'%';
+  if(T.left===0){ stopT(); toast('Time’s up. Nice work.'); go('checkin'); }
+}
+function startT(){ if(T.run) return; T.run=true; T.h=setInterval(tick,1000); syncT(); }
+function stopT(){ T.run=false; clearInterval(T.h); syncT(); }
+function syncT(){
+  const o=document.getElementById('orb'); if(o) o.className='s-orb '+(T.run?'running':'paused');
+  const p=document.getElementById('playbtn'); if(p){ p.innerHTML=T.run?pauseIco:playIco; p.setAttribute('aria-label',T.run?'Pause':'Play'); }
+}
+
+function vCheckin(){
+  const b = S.plan[S.day][S.cur];
+  const selfcheck = ['essaymock','outline','mock'].includes(b.key);
+  return `
+  <section class="screen">
+    <div class="bar"><span class="tag">Session complete</span></div>
+    <svg class="done-mark" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28"/><path d="M20 33 l8 8 l16 -18"/></svg>
+    <h2>How did it go?</h2>
+    <p class="lead">${b.label||b.name} · ${b.min} min</p>
+    ${selfcheck?`<div class="checklist">
+      <p class="tag">Self-check. Each “no” goes to tonight’s review.</p>
+      ${['I answered exactly what the question asked','My main point is clear at the start','Every argument has an example or evidence','I used the module’s concepts and authors','There’s a conclusion that closes the answer'].map((c,i)=>`<label for="sc-${i}"><input type="checkbox" id="sc-${i}" class="sc"> ${c}</label>`).join('')}
+    </div>`:''}
+    <div class="feel">
+      <button data-act="feel" data-v="easy">Easy<span>Moving on</span></button>
+      <button data-act="feel" data-v="ok">OK<span>Keep the plan</span></button>
+      <button data-act="feel" data-v="hard">Hard<span>Add a review</span></button>
+    </div>
+  </section>`;
+}
+
+/* ---------- Motion (anime.js v4) ---------- */
+const FX = () => !!window.anime && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+let lastScene = '';
+let busy = false;
+
+function riseChars(el, delay=0, step=14){
+  const { chars } = anime.splitText(el, { chars: { wrap: 'clip' } });
+  return anime.animate(chars, { y: ['110%','0%'], duration: 700, ease: 'out(4)', delay: anime.stagger(step, {start: delay}) });
+}
+function riseWords(el, delay=0){
+  const { words } = anime.splitText(el, { words: { wrap: 'clip' } });
+  return anime.animate(words, { y: ['110%','0%'], duration: 800, ease: 'out(4)', delay: anime.stagger(55, {start: delay}) });
+}
+function fadeUp(sel, start=0, step=60, dist=18){
+  const els = document.querySelectorAll(sel); if(!els.length) return;
+  anime.animate(els, { opacity: [0,1], y: [dist,0], duration: 600, ease: 'out(3)', delay: anime.stagger(step, {start}) });
+}
+function countUp(el, to, ms=900){
+  const t0 = performance.now();
+  const f = now => { const k = Math.min(1,(now-t0)/ms); el.textContent = Math.round(to*(1-Math.pow(1-k,3))); if(k<1) requestAnimationFrame(f); };
+  el.textContent = '0'; requestAnimationFrame(f);
+}
+
+let morphing = false;
+function starPoints(){
+  const u = anime.utils, total = u.random(4, 40), r1 = u.random(8, 50), r2 = 56;
+  const l = total % 2 ? total + 1 : total; let pts = '';
+  for(let i=0;i<l;i++){ const r = i%2 ? r1 : r2; const a = (2*Math.PI*i/l) - Math.PI/2;
+    pts += `${56 + u.round(r*Math.cos(a),0)},${56 + u.round(r*Math.sin(a),0)} `; }
+  return pts;
+}
+function morphLoop(){
+  const a = document.getElementById('morph-a'), b = document.getElementById('morph-b');
+  if(!a || !b || !morphing) return;
+  anime.utils.set(b, { points: starPoints() });
+  anime.animate(a, { points: anime.svg.morphTo(b), ease: 'inOutCirc', duration: 420, onComplete: morphLoop });
+}
+function morphSettle(){
+  morphing = false;
+  const a = document.getElementById('morph-a'), b = document.getElementById('morph-b');
+  if(!a || !b || !FX()) return;
+  anime.utils.set(b, { points: '56,0 64,48 112,56 64,64 56,112 48,64 0,56 48,48' });
+  anime.animate(a, { points: anime.svg.morphTo(b), ease: 'out(4)', duration: 700 });
+  anime.animate('.morph', { rotate: [0, 90], scale: [1, 1.12, 1], duration: 900, ease: 'inOut(3)' });
+}
+
+function quizOut(next, dir){
+  if(!FX() || busy){ next(); return; }
+  busy = true;
+  const h = document.querySelector('.screen h2'), opts = document.querySelectorAll('.opt');
+  const targets = [h, ...opts].filter(Boolean);
+  anime.animate(targets, { opacity: [1,0], y: [0, dir>0 ? -14 : 14], duration: 260, ease: 'in(2)', delay: anime.stagger(25),
+    onComplete: () => { busy = false; next(); } });
+}
+
+function animateScene(){
+  if(!FX()) return;
+  const scene = S.screen + (S.screen==='quiz' ? S.qi : S.screen==='today' ? S.day : '');
+  if(scene === lastScene) return;
+  lastScene = scene;
+  try{
+    if(S.screen==='welcome'){
+      riseWords(document.querySelector('h1'), 150);
+      fadeUp('.lead', 600); fadeUp('.steps-mini div', 800, 90);
+    }
+    if(S.screen==='quiz'){
+      riseChars(document.querySelector('.screen h2'), 0, 12);
+      fadeUp('.opt', 220, 70, 22);
+    }
+    if(S.screen==='building'){
+      anime.animate('.build-orb', { scale: [0.2,1], opacity: [0,1], duration: 900, ease: 'out(4)' });
+      anime.animate('.morph', { scale: [0,1], duration: 700, ease: 'out(4)' });
+      morphing = true; morphLoop();
+    }
+    if(S.screen==='reveal'){
+      const big = document.querySelector('.count .big'); if(big) countUp(big, +big.textContent);
+      fadeUp('.count > span:last-child', 300);
+      fadeUp('.why div', 500, 110, 12);
+      fadeUp('.day', 900, 90, 24);
+    }
+    if(S.screen==='save'){ riseChars(document.querySelector('h2'), 0, 18); fadeUp('.lead, .note', 300, 80); }
+    if(S.screen==='today'){ fadeUp('.stat', 0, 60, 10); fadeUp('.row', 120, 45, 12); }
+    if(S.screen==='session'){ anime.animate('.s-orb', { scale: [0.6,1], opacity: [0,1], duration: 900, ease: 'out(4)' }); fadeUp('.howto li', 300, 80, 10); }
+    if(S.screen==='checkin'){
+      anime.animate(anime.svg.createDrawable('.done-mark circle'), { draw: ['0 0','0 1'], duration: 700, ease: 'inOut(3)' });
+      anime.animate(anime.svg.createDrawable('.done-mark path'), { draw: ['0 0','0 1'], duration: 450, delay: 550, ease: 'out(3)' });
+      riseChars(document.querySelector('h2'), 0, 20); fadeUp('.feel button, .checklist label', 250, 60); }
+  }catch(e){}
+}
+
+function render(){
+  const v = {welcome:vWelcome,quiz:vQuiz,building:vBuilding,reveal:vReveal,save:vSave,today:vToday,session:vSession,checkin:vCheckin}[S.screen]();
+  document.getElementById('app').innerHTML = v;
+  persist();
+  animateScene();
+  if(S.screen==='session'){
+    const bar=document.getElementById('tbar'); if(bar) bar.style.width=((T.total-T.left)/T.total*100)+'%';
+    const f=document.getElementById('fast'); if(f) f.onchange=()=>{T.fast=f.checked;};
+  }
+}
+
+document.addEventListener('click', e=>{
+  const el = e.target.closest('[data-act]'); if(!el) return;
+  const act = el.dataset.act, v = el.dataset.v;
+  if(act==='start'){ S.qi=0; go('quiz'); }
+  else if(act==='pick'){
+    S.a[QUIZ[S.qi].k]=v; persist();
+    document.querySelectorAll('.opt').forEach(o=>o.setAttribute('aria-pressed', o.dataset.v===v));
+    const nb=document.querySelector('[data-act="qnext"]'); if(nb) nb.disabled=false;
+    if(FX()) anime.animate(el.querySelector('.dot'),{scale:[0.4,1.25,1],duration:420,ease:'out(3)'});
+  }
+  else if(act==='qback'){ quizOut(()=>{ if(S.qi===0) go('welcome'); else { S.qi--; render(); } }, -1); }
+  else if(act==='qnext'){
+    if(S.qi<QUIZ.length-1){ quizOut(()=>{ S.qi++; render(); }, 1); }
+    else {
+      S.plan = buildPlan(S.a); S.day=0; S.done={}; S.unsure=0; S.start=new Date().toISOString();
+      go('building');
+      const lines=['Analysing your answers…','Picking the right techniques…','Spreading sessions across your days…','Your plan is ready.'];
+      lines.forEach((l,i)=>setTimeout(()=>{ const b=document.getElementById('bline'); if(!b) return; b.textContent=l; if(FX()) riseChars(b, 0, 10); if(i===lines.length-1) morphSettle(); },i*900));
+      setTimeout(()=>{ morphing=false; go('reveal'); }, lines.length*900 + 300);
+    }
+  }
+  else if(act==='save') go('save');
+  else if(act==='toReveal') go('reveal');
+  else if(act==='today') go('today');
+  else if(act==='restart'){ try{localStorage.removeItem(KEY)}catch(e){} S={screen:'welcome',qi:0,a:{},plan:null,day:0,unsure:0,cur:null,done:{}}; lastScene=''; render(); }
+  else if(act==='day'){ S.day=+v; render(); }
+  else if(act==='open'){
+    S.cur=+v; const b=S.plan[S.day][S.cur];
+    stopT(); T.total=b.min*60; T.left=T.total; go('session');
+  }
+  else if(act==='toggle'){ T.run?stopT():startT(); }
+  else if(act==='reset'){ stopT(); T.left=T.total; render(); }
+  else if(act==='exit'){ stopT(); go('today'); }
+  else if(act==='finish'){ stopT(); go('checkin'); }
+  else if(act==='unsure'){ S.unsure++; toast(`Added to tonight’s quick review · ${S.unsure} item${S.unsure===1?'':'s'}`); }
+  else if(act==='feel'){
+    const misses = document.querySelectorAll('.sc:not(:checked)').length;
+    if(misses){ S.unsure+=misses; }
+    S.done[`${S.day}-${S.cur}`]=true;
+    const b=S.plan[S.day][S.cur];
+    if(b.key==='review') S.unsure = 0;
+    if(v==='hard' && S.plan[S.day+1]){
+      const nd=S.plan[S.day+1]; nd.splice(nd.length-1,0,{...B.review,key:'review',min:10,name:'Extra review'});
+      toast('Noted. We added a review to tomorrow.');
+    } else if(misses){ toast(`${misses} point${misses>1?'s':''} added to tonight’s review`); }
+    else toast(v==='easy'?'Nice. On to the next one.':'Logged. Keep going.');
+    go('today');
+  }
+});
+
+restore();
+render();
+</script>
+</body>
+</html>
